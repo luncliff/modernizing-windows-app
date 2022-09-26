@@ -26,3 +26,8 @@
 #include <winrt/Microsoft.UI.Dispatching.h>
 #include <wil/cppwinrt_helpers.h>
 // clang-format on
+
+#define FMT_HEADER_ONLY
+#define SPDLOG_HEADER_ONLY
+#include <fmt/format.h>
+#include <spdlog/spdlog.h>
