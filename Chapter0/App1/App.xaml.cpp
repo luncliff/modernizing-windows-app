@@ -14,6 +14,8 @@ using namespace App1::implementation;
 using winrt::Windows::System::DispatcherQueue;
 using winrt::Windows::System::DispatcherQueueController;
 
+void set_log_stream(const char* name);
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
@@ -33,6 +35,7 @@ App::App() {
         }
     });
 #endif
+    set_log_stream("App");
 }
 
 /// <summary>
@@ -42,6 +45,7 @@ App::App() {
 /// </summary>
 /// <param name="e">Details about the launch request and process.</param>
 void App::OnLaunched(LaunchActivatedEventArgs const&) {
+    spdlog::info("{}", __func__);
     controller = DispatcherQueueController::CreateOnDedicatedThread();
     queue = controller.DispatcherQueue();
     window = make<MainWindow>();

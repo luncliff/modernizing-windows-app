@@ -10,18 +10,21 @@
 using namespace winrt;
 using namespace Microsoft::UI::Xaml;
 
+void send_notification(winrt::hstring title, winrt::hstring message);
+
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace winrt::App1::implementation {
 MainWindow::MainWindow() {
     InitializeComponent();
-
+    spdlog::info("{}", __func__);
     // see https://learn.microsoft.com/en-us/windows/apps/develop/ui-input/retrieve-hwnd
     auto native = this->try_as<::IWindowNative>();
     winrt::check_bool(native);
     if (winrt::hresult hr = native->get_WindowHandle(&hwnd); FAILED(hr))
         winrt::throw_hresult(hr);
+    spdlog::info("{}: {}", "MainWindow", static_cast<void*>(hwnd));
 }
 
 int32_t MainWindow::MyProperty() {
@@ -37,6 +40,7 @@ Windows::Foundation::IAsyncAction MainWindow::DoAsync() {
 }
 
 void MainWindow::myButton_Click(IInspectable const&, RoutedEventArgs const&) {
+    send_notification(L"MainWindow", L"myButton_Click");
     myButton().Content(box_value(L"Clicked"));
 }
 } // namespace winrt::App1::implementation

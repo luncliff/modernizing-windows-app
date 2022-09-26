@@ -24,5 +24,11 @@
 #include <winrt/Microsoft.UI.Xaml.Navigation.h>
 #include <winrt/Microsoft.UI.Xaml.Shapes.h>
 #include <winrt/Microsoft.UI.Dispatching.h>
+#include <winrt/Windows.UI.Notifications.h>
 #include <wil/cppwinrt_helpers.h>
 // clang-format on
+
+#define FMT_HEADER_ONLY
+#define SPDLOG_HEADER_ONLY
+#include <fmt/format.h>
+#include <spdlog/spdlog.h>
