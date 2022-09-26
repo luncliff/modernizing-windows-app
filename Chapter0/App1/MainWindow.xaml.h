@@ -20,6 +20,8 @@ struct MainWindow : MainWindowT<MainWindow> {
                         Microsoft::UI::Xaml::RoutedEventArgs const& args);
     void open_video_file_Click(Windows::Foundation::IInspectable const& sender,
                                Microsoft::UI::Xaml::RoutedEventArgs const& args);
+    Windows::Foundation::IAsyncAction change_page_Click(Windows::Foundation::IInspectable const& sender,
+                           Microsoft::UI::Xaml::RoutedEventArgs const& args);
 };
 } // namespace winrt::App1::implementation
 

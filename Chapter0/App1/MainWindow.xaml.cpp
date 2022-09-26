@@ -39,7 +39,8 @@ void MainWindow::MyProperty(int32_t /* value */) {
 }
 
 Windows::Foundation::IAsyncAction MainWindow::DoAsync() {
-    throw winrt::hresult_not_implemented();
+    co_await winrt::resume_background();
+    spdlog::debug("{}: {}", "MainWindow", __func__);
 }
 
 void MainWindow::myButton_Click(IInspectable const&, RoutedEventArgs const&) {
@@ -51,6 +52,15 @@ void MainWindow::open_video_file_Click(IInspectable const&, RoutedEventArgs cons
     spdlog::debug("{}: {}", "MainWindow", __func__);
     /// @todo support winrt::Windows::UI::Core::CoreWindow
     open_video_file(hwnd);
+}
+
+Windows::Foundation::IAsyncAction MainWindow::change_page_Click(Windows::Foundation::IInspectable const& sender,
+                                                                Microsoft::UI::Xaml::RoutedEventArgs const& args) {
+    spdlog::debug("{}: {}", "MainWindow", __func__);
+    co_await DoAsync();
+    MediaSinkPage page{};
+    this->Content(page);
+    // ...
 }
 
 } // namespace winrt::App1::implementation

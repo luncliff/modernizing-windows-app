@@ -10,5 +10,6 @@
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
         <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
         <Button x:Name="openVideoFileButton" Click="open_video_file_Click">Open Video File</Button>
+        <Button x:Name="changePageButton" Click="change_page_Click">Change Page</Button>
     </StackPanel>
 </Window>
