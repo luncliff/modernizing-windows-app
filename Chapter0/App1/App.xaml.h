@@ -5,6 +5,7 @@
 namespace winrt::App1::implementation {
 struct App : AppT<App> {
     App();
+    ~App() noexcept;
 
     void OnLaunched(Microsoft::UI::Xaml::LaunchActivatedEventArgs const&);
 

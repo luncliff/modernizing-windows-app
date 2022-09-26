@@ -75,3 +75,11 @@ void send_notification(winrt::hstring title, winrt::hstring message) {
     ToastNotifier notifier = manager.CreateToastNotifier();
     notifier.Show(notification);
 }
+
+void print_version_info() {
+    spdlog::info("WinRT:");
+    spdlog::info("  version: {:s}", CPPWINRT_VERSION); // WINRT_version
+    spdlog::info("Media Foundation:");
+    spdlog::info("  SDK: {:X}", MF_SDK_VERSION);
+    spdlog::info("  API: {:X}", MF_API_VERSION);
+}

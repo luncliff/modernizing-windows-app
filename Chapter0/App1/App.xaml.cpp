@@ -15,6 +15,7 @@ using winrt::Windows::System::DispatcherQueue;
 using winrt::Windows::System::DispatcherQueueController;
 
 void set_log_stream(const char* name);
+void print_version_info();
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -36,6 +37,12 @@ App::App() {
     });
 #endif
     set_log_stream("App");
+    winrt::check_hresult(MFStartup(MF_VERSION, MFSTARTUP_FULL));
+    print_version_info();
+}
+
+App::~App() {
+    MFShutdown();
 }
 
 /// <summary>
@@ -48,6 +55,7 @@ void App::OnLaunched(LaunchActivatedEventArgs const&) {
     spdlog::info("{}", __func__);
     controller = DispatcherQueueController::CreateOnDedicatedThread();
     queue = controller.DispatcherQueue();
+    spdlog::debug("{}: {}", __func__, "DispatcherQueue are ready");
     window = make<MainWindow>();
     window.Activate();
 }

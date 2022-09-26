@@ -1,6 +1,10 @@
 ﻿#pragma once
 #include <windows.h>
 
+#include <experimental/generator>
+#include <mfapi.h>
+
+// MIDL headers
 #include <hstring.h>
 #include <restrictederrorinfo.h>
 #include <unknwn.h>
