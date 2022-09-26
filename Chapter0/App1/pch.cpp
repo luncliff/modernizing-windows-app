@@ -1,5 +1,7 @@
 ﻿#include "pch.h"
 
+#include <winrt/Windows.Data.Xml.Dom.h>
+
 #include <cstdio>
 #include <fmt/chrono.h>
 #include <spdlog/pattern_formatter.h>
@@ -40,4 +42,36 @@ void set_log_stream(const char* name) {
     logger->set_level(spdlog::level::level_enum::debug);
 #endif
     spdlog::set_default_logger(logger);
+}
+
+/// @see https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/send-local-toast-cpp-uwp
+void send_notification(winrt::hstring title, winrt::hstring message) {
+    using winrt::Windows::Data::Xml::Dom::XmlDocument;
+    using winrt::Windows::UI::Notifications::ToastNotification;
+    using winrt::Windows::UI::Notifications::ToastNotificationManager;
+    using winrt::Windows::UI::Notifications::ToastNotifier;
+    spdlog::info("{}", winrt::to_string(title));
+
+    XmlDocument doc{};
+    doc.LoadXml(L"\
+    <toast>\
+        <visual>\
+            <binding template=\"ToastGeneric\">\
+                <text></text>\
+                <text></text>\
+            </binding>\
+        </visual>\
+    </toast>");
+
+    // Populate with text and values
+    //doc.DocumentElement().SetAttribute(L"launch", L"action=viewConversation&conversationId=9813");
+    doc.SelectSingleNode(L"//text[1]").InnerText(title);
+    doc.SelectSingleNode(L"//text[2]").InnerText(message);
+
+    // Construct the notification
+    // And show it!
+    ToastNotification notification{doc};
+    ToastNotificationManager manager{};
+    ToastNotifier notifier = manager.CreateToastNotifier();
+    notifier.Show(notification);
 }
