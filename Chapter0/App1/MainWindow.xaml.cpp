@@ -8,9 +8,12 @@
 #endif
 
 using namespace winrt;
-using namespace Microsoft::UI::Xaml;
+using namespace winrt::Microsoft::UI::Xaml;
+using namespace std::experimental;
 
 void send_notification(winrt::hstring title, winrt::hstring message);
+
+winrt::Windows::Foundation::IAsyncAction open_video_file(HWND window);
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,4 +46,11 @@ void MainWindow::myButton_Click(IInspectable const&, RoutedEventArgs const&) {
     send_notification(L"MainWindow", L"myButton_Click");
     myButton().Content(box_value(L"Clicked"));
 }
+
+void MainWindow::open_video_file_Click(IInspectable const&, RoutedEventArgs const&) {
+    spdlog::debug("{}: {}", "MainWindow", __func__);
+    /// @todo support winrt::Windows::UI::Core::CoreWindow
+    open_video_file(hwnd);
+}
+
 } // namespace winrt::App1::implementation

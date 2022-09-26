@@ -1,6 +1,8 @@
 ﻿#include "pch.h"
 
+#include <Shobjidl.h> /// @todo support both Windows.UI.Core.h
 #include <winrt/Windows.Data.Xml.Dom.h>
+#include <winrt/Windows.Storage.Pickers.h>
 
 #include <cstdio>
 #include <fmt/chrono.h>
@@ -41,7 +43,23 @@ void set_log_stream(const char* name) {
 #if defined(_DEBUG)
     logger->set_level(spdlog::level::level_enum::debug);
 #endif
+    if (has_env("CI"))
+        logger->set_level(spdlog::level::level_enum::trace);
     spdlog::set_default_logger(logger);
+}
+
+winrt::Windows::Foundation::IAsyncAction open_video_file(HWND window) {
+    using winrt::Windows::Storage::StorageFile;
+    using winrt::Windows::Storage::Pickers::FileOpenPicker;
+    using winrt::Windows::Storage::Pickers::PickerLocationId;
+    FileOpenPicker picker{};
+    picker.SuggestedStartLocation(PickerLocationId::VideosLibrary);
+    picker.as<IInitializeWithWindow>()->Initialize(window);
+    auto filter = picker.FileTypeFilter();
+    for (auto pattern : {L".mp4", L".avi", L".mkv"})
+        filter.Append(pattern);
+    StorageFile file = co_await picker.PickSingleFileAsync();
+    spdlog::debug("{}: {}", __func__, winrt::to_string(file.Path()));
 }
 
 /// @see https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/send-local-toast-cpp-uwp
