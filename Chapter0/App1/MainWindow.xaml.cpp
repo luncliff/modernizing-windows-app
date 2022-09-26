@@ -40,7 +40,6 @@ Windows::Foundation::IAsyncAction MainWindow::DoAsync() {
 }
 
 void MainWindow::myButton_Click(IInspectable const&, RoutedEventArgs const&) {
-    spdlog::debug("{}", __func__);
     send_notification(L"MainWindow", L"myButton_Click");
     myButton().Content(box_value(L"Clicked"));
 }

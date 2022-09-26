@@ -50,7 +50,7 @@ void send_notification(winrt::hstring title, winrt::hstring message) {
     using winrt::Windows::UI::Notifications::ToastNotification;
     using winrt::Windows::UI::Notifications::ToastNotificationManager;
     using winrt::Windows::UI::Notifications::ToastNotifier;
-    spdlog::info("{}", winrt::to_string(title));
+    spdlog::info("{}: {}", winrt::to_string(title), winrt::to_string(message));
 
     XmlDocument doc{};
     doc.LoadXml(L"\
