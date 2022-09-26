@@ -23,14 +23,18 @@ configuration:
   # - release
 
 cache:
-  # - c:/tools/vcpkg/downloads
+  - c:/tools/vcpkg/downloads
+  - c:/tools/vcpkg/caches
   - C:/Program Files (x86)/Microsoft SDKs/NuGetPackages
   - C:/Program Files/dotnet/library-packs
 
 environment:
-  # global:
-  #   VCPKG_ROOT: c:/tools/vcpkg
-  matrix: 
+  global:
+    VCPKG_ROOT: c:/tools/vcpkg
+    VCPKG_DEFAULT_BINARY_CACHE: c:/tools/vcpkg/caches
+  matrix:
+    - folder: Chapter0
+      sln: Chapter0.sln
     - folder: Chapter01/01-WinUI-Packaged
       sln: 01-WinUI-Packaged.sln
     - folder: Chapter01/02-WinUI-Unpackaged
@@ -62,6 +66,11 @@ environment:
 
 install:
   - ps: nuget restore "${env:folder}/${env:sln}"
+
+before_build:
+  - ps: New-Item -Type Directory -Force -Path "${env:VCPKG_DEFAULT_BINARY_CACHE}"
+  - ps: vcpkg install --triplet=x64-windows spdlog
+  - ps: vcpkg integrate project
 
 build:
   project: $(folder)/$(sln)
