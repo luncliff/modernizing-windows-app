@@ -53,6 +53,22 @@ App::~App() {
 /// <param name="e">Details about the launch request and process.</param>
 void App::OnLaunched(LaunchActivatedEventArgs const&) {
     spdlog::info("{}", __func__);
+
+    {
+        const auto paths = winrt::Windows::Storage::AppDataPaths::GetDefault();
+        spdlog::info("appdata:");
+        spdlog::info(" {:s}: {:s}", "local", winrt::to_string(paths.LocalAppData()));
+        spdlog::info(" {:s}: {:s}", "desktop", winrt::to_string(paths.Desktop()));
+        spdlog::info(" {:s}: {:s}", "documents", winrt::to_string(paths.Documents()));
+    }
+    {
+        const auto data = winrt::Windows::Storage::ApplicationData::Current();
+        spdlog::info("storage:");
+        spdlog::info(" {:s}: {:s}", "temp", winrt::to_string(data.TemporaryFolder().Path()));
+        spdlog::info(" {:s}: {:s}", "local", winrt::to_string(data.LocalFolder().Path()));
+        spdlog::info(" {:s}: {:s}", "local_cache", winrt::to_string(data.LocalCacheFolder().Path()));
+        spdlog::info(" {:s}: {:s}", "shared_local", winrt::to_string(data.SharedLocalFolder().Path()));
+    }
     controller = DispatcherQueueController::CreateOnDedicatedThread();
     queue = controller.DispatcherQueue();
     spdlog::debug("{}: {}", __func__, "DispatcherQueue are ready");
