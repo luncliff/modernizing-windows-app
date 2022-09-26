@@ -45,6 +45,7 @@ App::App() {
 /// </summary>
 /// <param name="e">Details about the launch request and process.</param>
 void App::OnLaunched(LaunchActivatedEventArgs const&) {
+    spdlog::info("{}", __func__);
     controller = DispatcherQueueController::CreateOnDedicatedThread();
     queue = controller.DispatcherQueue();
     window = make<MainWindow>();

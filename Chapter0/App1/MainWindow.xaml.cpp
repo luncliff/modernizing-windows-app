@@ -16,12 +16,13 @@ using namespace Microsoft::UI::Xaml;
 namespace winrt::App1::implementation {
 MainWindow::MainWindow() {
     InitializeComponent();
-
+    spdlog::info("{}", __func__);
     // see https://learn.microsoft.com/en-us/windows/apps/develop/ui-input/retrieve-hwnd
     auto native = this->try_as<::IWindowNative>();
     winrt::check_bool(native);
     if (winrt::hresult hr = native->get_WindowHandle(&hwnd); FAILED(hr))
         winrt::throw_hresult(hr);
+    spdlog::info("{}: {}", "MainWindow", static_cast<void*>(hwnd));
 }
 
 int32_t MainWindow::MyProperty() {
