@@ -1,0 +1,11 @@
+namespace LocalizationCpp
+{
+	runtimeclass ResourceString : Microsoft.UI.Xaml.Markup.MarkupExtension
+	{
+		ResourceString();
+
+		String Name;
+
+		IInspectable ProvideValue();
+	}
+}
