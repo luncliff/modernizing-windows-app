@@ -1,0 +1,8 @@
+namespace App1
+{
+    [default_interface]
+    runtimeclass CustomPage1 : Microsoft.UI.Xaml.Controls.Page
+    {
+        CustomPage1();
+    }
+}

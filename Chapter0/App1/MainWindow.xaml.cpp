@@ -1,42 +1,48 @@
 ﻿#include "pch.h"
 
-#include <microsoft.ui.xaml.window.h>
-
 #include "MainWindow.xaml.h"
 #if __has_include("MainWindow.g.cpp")
 #include "MainWindow.g.cpp"
 #endif
 
-using namespace winrt;
-using namespace Microsoft::UI::Xaml;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
-
 namespace winrt::App1::implementation {
+
 MainWindow::MainWindow() {
     InitializeComponent();
-
     // see https://learn.microsoft.com/en-us/windows/apps/develop/ui-input/retrieve-hwnd
     auto native = this->try_as<::IWindowNative>();
-    winrt::check_bool(native);
-    if (winrt::hresult hr = native->get_WindowHandle(&hwnd); FAILED(hr))
+    if (auto hr = native->get_WindowHandle(&hwnd); FAILED(hr))
         winrt::throw_hresult(hr);
+    spdlog::info("{}: HWND {:p}", "MainWindow", static_cast<void*>(hwnd));
 }
 
-int32_t MainWindow::MyProperty() {
-    throw winrt::hresult_not_implemented();
+Windows::System::DispatcherQueue MainWindow::BackgroundQueue() noexcept {
+    return queue;
 }
 
-void MainWindow::MyProperty(int32_t /* value */) {
-    throw winrt::hresult_not_implemented();
+void MainWindow::BackgroundQueue(Windows::System::DispatcherQueue _queue) noexcept {
+    queue = _queue;
 }
 
-Windows::Foundation::IAsyncAction MainWindow::DoAsync() {
-    throw winrt::hresult_not_implemented();
+void MainWindow::on_button1_clicked(IInspectable const&, RoutedEventArgs const&) {
+    Button1().Content(box_value(L"Clicked"));
 }
 
-void MainWindow::myButton_Click(IInspectable const&, RoutedEventArgs const&) {
-    myButton().Content(box_value(L"Clicked"));
+void MainWindow::on_button2_clicked(IInspectable const&, RoutedEventArgs const&) {
+    Button2().Content(box_value(L"Clicked"));
 }
+
+void MainWindow::on_window_size_changed(IInspectable const&, WindowSizeChangedEventArgs const& e) {
+    auto s = e.Size();
+    spdlog::info("{}: size ({:.2f},{:.2f})", "MainWindow", s.Width, s.Height);
+}
+
+void MainWindow::on_window_visibility_changed(IInspectable const&, WindowVisibilityChangedEventArgs const& e) {
+    spdlog::info("{}: visibility {}", "MainWindow", e.Visible());
+}
+
+IAsyncAction MainWindow::ChangeTheme() {
+    co_await std::experimental::suspend_never{};
+}
+
 } // namespace winrt::App1::implementation

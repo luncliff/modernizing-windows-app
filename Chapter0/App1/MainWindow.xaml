@@ -5,9 +5,15 @@
     xmlns:local="using:App1"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
-
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
+    mc:Ignorable="d"
+    SizeChanged="on_window_size_changed"
+    VisibilityChanged="on_window_visibility_changed">
+    <StackPanel MaxWidth="300" 
+                Background="DarkSlateGray" 
+                HorizontalAlignment="Left" 
+                VerticalAlignment="Stretch"
+                Orientation="Vertical">
+        <Button x:Name="Button1" Click="on_button1_clicked">Button 1</Button>
+        <Button x:Name="Button2" Click="on_button2_clicked">Button 2</Button>
     </StackPanel>
 </Window>

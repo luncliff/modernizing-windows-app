@@ -3,11 +3,9 @@ namespace App1 {
 
 [default_interface] runtimeclass MainWindow : Microsoft.UI.Xaml.Window {
     MainWindow();
-    Int32 MyProperty;
 
-    // Windows.System.DispatcherQueue Queue;
-    Windows.Foundation.IAsyncAction DoAsync();
+    Windows.System.DispatcherQueue BackgroundQueue;
 
-    // todo: event
+    Windows.Foundation.IAsyncAction ChangeTheme();
 }
 } // namespace App1
