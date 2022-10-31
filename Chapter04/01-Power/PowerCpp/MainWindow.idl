@@ -1,0 +1,18 @@
+namespace PowerCpp
+{
+    [default_interface]
+    runtimeclass MainWindow : Microsoft.UI.Xaml.Window
+    {
+        MainWindow();
+
+        Microsoft.Windows.System.Power.BatteryStatus GetBatteryStatus();
+        Microsoft.Windows.System.Power.DisplayStatus GetDisplayStatus();
+        Microsoft.Windows.System.Power.EffectivePowerMode GetEffectivePowerMode();
+        Microsoft.Windows.System.Power.EnergySaverStatus GetEnergySaverStatus();
+        Microsoft.Windows.System.Power.PowerSourceKind GetPowerSourceKind();
+        Microsoft.Windows.System.Power.PowerSupplyStatus GetPowerSupplyStatus();
+        Int32 GetRemainingChargePercent();
+        Microsoft.Windows.System.Power.SystemSuspendStatus GetSystemSuspendStatus();
+        Microsoft.Windows.System.Power.UserPresenceStatus GetUserPresenceStatus();
+    }
+}
