@@ -1,0 +1,25 @@
+namespace NotificationsCpp
+{
+    [default_interface]
+    runtimeclass MainWindow : Microsoft.UI.Xaml.Window
+    {
+        MainWindow();
+
+        void OnSendTextNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendImageNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendHeroImageNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendInlineHeroImageNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnCustomNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnTaggedNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnScheduledNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnDeleteScheduledNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendInteractiveNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendNotificationWithButtons(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendNotificationWithReply(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendNotificationWithDropdown(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendNotificationWithReminder(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        Windows.Foundation.IAsyncAction OnSendNotificationWithProgressBar(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendBadgeNumericNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+        void OnSendBadgeGlyphNotification(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+    }
+}
