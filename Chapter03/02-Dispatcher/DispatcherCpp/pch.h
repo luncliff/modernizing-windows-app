@@ -2,7 +2,7 @@
 #include <Windows.h>
 
 #undef GetCurrentTime
-#include <wil/cppwinrt_helpers.h>
+
 #include <winrt/Microsoft.UI.Composition.h>
 #include <winrt/Microsoft.UI.Dispatching.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.Primitives.h>

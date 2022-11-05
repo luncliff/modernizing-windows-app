@@ -2,7 +2,7 @@
 #include <windows.h>
 
 #undef GetCurrentTime
-#include <wil/cppwinrt_helpers.h>
+
 #include <winrt/Microsoft.UI.Composition.h>
 #include <winrt/Microsoft.UI.Dispatching.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.Primitives.h>
@@ -24,27 +24,26 @@
 #include <restrictederrorinfo.h>
 #include <unknwn.h>
 
-namespace winrt::LocalizationCpp
-{
-	using Microsoft::Windows::ApplicationModel::Resources::ResourceContext;
-	using Microsoft::Windows::ApplicationModel::Resources::ResourceManager;
-	using Microsoft::Windows::ApplicationModel::Resources::ResourceMap;
+namespace winrt::LocalizationCpp {
+using Microsoft::Windows::ApplicationModel::Resources::ResourceContext;
+using Microsoft::Windows::ApplicationModel::Resources::ResourceManager;
+using Microsoft::Windows::ApplicationModel::Resources::ResourceMap;
 
-	class AppResourceManager final {
-		ResourceManager manager{};
-		ResourceContext context = nullptr;
-		ResourceMap main = nullptr;
+class AppResourceManager final {
+  ResourceManager manager{};
+  ResourceContext context = nullptr;
+  ResourceMap main = nullptr;
 
-	private:
-		AppResourceManager() noexcept(false);
+private:
+  AppResourceManager() noexcept(false);
 
-	public:
-		static AppResourceManager& Instance();
+public:
+  static AppResourceManager &Instance();
 
-		std::wstring MakeKey(winrt::hstring name);
-		winrt::hstring GetString(winrt::hstring name);
-		winrt::com_array<uint8_t> GetBytes(winrt::hstring name);
-	};
+  std::wstring MakeKey(winrt::hstring name);
+  winrt::hstring GetString(winrt::hstring name);
+  winrt::com_array<uint8_t> GetBytes(winrt::hstring name);
+};
 
 } // namespace winrt::LocalizationCpp
 

@@ -55,6 +55,8 @@ environment:
       sln: Activation.sln
     - folder: Chapter04/04-Windowing
       sln: 04-Windowing.sln
+    - folder: Chapter07/WinUI
+      sln: WinUI_Desktop.sln
     - folder: Chapter08/01-LocationServices
       sln: LocationServices.sln
     - folder: Chapter08/03-Files

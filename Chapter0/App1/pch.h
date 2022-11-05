@@ -26,7 +26,7 @@
 #include <winrt/Windows.Storage.h>
 #include <winrt/Windows.System.h>
 #include <winrt/Windows.UI.Notifications.h>
-#include <wil/cppwinrt_helpers.h>
+
 // clang-format on
 
 // MIDL headers
