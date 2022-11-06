@@ -4,17 +4,16 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
-  xmlns:uap6="http://schemas.microsoft.com/appx/manifest/uap/windows10/6"
-  IgnorableNamespaces="uap rescap uap6">
+  IgnorableNamespaces="uap rescap">
 
   <Identity
-    Name="7ad6b09b-d6af-4f47-ae99-ab08fdb82ca5"
+    Name="8549fa8d-fa46-4481-9ff3-ac8519ea5a07"
     Publisher="CN=luncl"
-    Version="0.2239.0.0" />
+    Version="1.0.0.0" />
 
   <Properties>
-    <DisplayName>CppWinUI3App1</DisplayName>
-    <PublisherDisplayName>luncliff</PublisherDisplayName>
+    <DisplayName>SwapchainPanelTest</DisplayName>
+    <PublisherDisplayName>luncl</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
 
@@ -32,31 +31,18 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="CppWinUI3App1"
-        Description="Practice with &quot;Modernizing Your Windows Applications with the Windows App SDK and WinUI&quot;"
+        DisplayName="SwapchainPanelTest"
+        Description="SwapchainPanelTest"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png" />
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
-        <uap:InitialRotationPreference>
-          <uap:Rotation Preference="landscape"/>
-          <uap:Rotation Preference="portrait"/>
-          <uap:Rotation Preference="landscapeFlipped"/>
-          <uap:Rotation Preference="portraitFlipped"/></uap:InitialRotationPreference>
       </uap:VisualElements>
     </Application>
   </Applications>
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
-    <Capability Name="internetClientServer"/>
-    <Capability Name="internetClient"/>
-    <uap:Capability Name="videosLibrary"/>
-    <uap:Capability Name="musicLibrary"/>
-    <uap:Capability Name="picturesLibrary"/>
-    <DeviceCapability Name="webcam"/>
-    <DeviceCapability Name="location"/>
-    <DeviceCapability Name="microphone"/>
   </Capabilities>
 </Package>

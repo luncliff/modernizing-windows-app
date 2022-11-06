@@ -1,0 +1,22 @@
+<Window
+    x:Class="SwapchainPanelTest.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SwapchainPanelTest"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <NavigationView x:Name="navigationView"
+                    ItemInvoked="on_item_invoked" IsBackEnabled="{x:Bind ShellFrame.CanGoBack, Mode=OneWay}"
+                    BackRequested="on_back_requested" IsSettingsVisible="True">
+        <NavigationView.MenuItems>
+            <NavigationViewItem Content="TestPage1" Icon="Pictures" Tag="TestPage1" />
+        </NavigationView.MenuItems>
+        <!-- ... -->
+        <NavigationView.FooterMenuItems>
+            <NavigationViewItem Content="Support" Icon="Help" Tag="Support" />
+        </NavigationView.FooterMenuItems>
+        <!-- ... -->
+        <Frame x:Name="ShellFrame" />
+    </NavigationView>
+</Window>

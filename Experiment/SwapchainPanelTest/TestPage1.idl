@@ -1,0 +1,11 @@
+
+namespace SwapchainPanelTest {
+
+[default_interface] runtimeclass TestPage1 : Microsoft.UI.Xaml.Controls.Page {
+  TestPage1();
+
+  void PausePage();
+  void ResumePage();
+}
+
+} // namespace SwapchainPanelTest
