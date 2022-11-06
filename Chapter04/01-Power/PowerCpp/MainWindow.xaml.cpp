@@ -21,7 +21,7 @@ namespace winrt::PowerCpp::implementation {
 		txtEnergySaverStatus().Text(make_hstring(L"EnergySaverStatus", GetEnergySaverStatus()));
 		txtPowerSourceKind().Text(make_hstring(L"PowerSourceKind", GetPowerSourceKind()));
 		txtPowerSupplyStatus().Text(make_hstring(L"PowerSupplyStatus", GetPowerSupplyStatus()));
-		txtSystemSupendedStatus().Text(make_hstring(L"SystemSuspendStatus", GetSystemSuspendStatus()));
+		//txtSystemSupendedStatus().Text(make_hstring(L"SystemSuspendStatus", GetSystemSuspendStatus()));
 		txtUserPresenceStatus().Text(make_hstring(L"UserPresenceStatus", GetUserPresenceStatus()));
 	}
 
