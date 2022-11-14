@@ -1,0 +1,13 @@
+import "RepositoryItem.idl";
+
+namespace CollectionTest {
+
+runtimeclass RepositoryViewModel {
+  RepositoryViewModel();
+
+  IObservableVector<RepositoryItem> Repositories {
+    get;
+  };
+}
+
+} // namespace CollectionTest

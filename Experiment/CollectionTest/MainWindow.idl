@@ -1,11 +1,13 @@
-import "MyItem1.idl";
+import "RepositoryViewModel.idl";
 
 namespace CollectionTest {
 
 [default_interface] runtimeclass MainWindow : Microsoft.UI.Xaml.Window {
   MainWindow();
 
-  IObservableVector<MyItem1> Item1Collection { get; };
+  RepositoryViewModel FirstViewModel {
+    get;
+  };
 }
 
 } // namespace CollectionTest

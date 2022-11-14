@@ -4,36 +4,47 @@
 #if __has_include("MainWindow.g.cpp")
 #include "MainWindow.g.cpp"
 #endif
-#include "MyItem1.h"
+#include <winrt/Microsoft.Windows.System.h>
 
 namespace winrt::CollectionTest::implementation {
 using namespace Microsoft::UI::Xaml;
+using Windows::System::Launcher;
 
 /// @see
 /// https://learn.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/collections
 MainWindow::MainWindow() {
-  items = winrt::single_threaded_observable_vector<CollectionTest::MyItem1>();
-  for (auto i = 0; i < 3; ++i) {
-    winrt::hstring name{fmt::format(L"item-{}", i)};
-    // implementation::MyItem1 item{winrt::hstring(name)};
-    items.Append(winrt::make<implementation::MyItem1>(name));
-  }
+  spdlog::info("{}: {}", "MainWindow", __func__);
+  viewModel0 = winrt::make<implementation::RepositoryViewModel>();
   InitializeComponent();
 }
 
-IObservableVector<CollectionTest::MyItem1> MainWindow::Item1Collection() {
-  spdlog::info("{}: {}", __func__, items.Size());
-  return items;
+CollectionTest::RepositoryViewModel MainWindow::FirstViewModel() {
+  return viewModel0;
 }
 
 void MainWindow::on_button_clicked(IInspectable const& s,
                                    RoutedEventArgs const&) {
-  auto button = s.as<Button>();
-  button.Content(box_value(L"Clicked"));
+  if (auto button = s.try_as<Button>(); button != nullptr)
+    // button.Content(box_value(L"Clicked"));
+    spdlog::debug("{}: {}", "MainWindow", "sender is Button");
+}
 
-  winrt::hstring name{fmt::format(L"item-{}", items.Size())};
-  // implementation::MyItem1 item{winrt::hstring(name)};
-  items.Append(winrt::make<implementation::MyItem1>(name));
+IAsyncAction
+MainWindow::on_selection_changed(IInspectable const& s,
+                                 SelectionChangedEventArgs const&) {
+  auto view = s.try_as<Microsoft::UI::Xaml::Controls::ListView>();
+  if (view == nullptr)
+    return;
+  auto selected = view.SelectedItem();
+  auto item = selected.try_as<RepositoryItem>();
+  if (item == nullptr)
+    return;
+
+  spdlog::info("{}: selected {}", "MainWindow", winrt::to_string(item.Name()));
+  auto launched =
+      co_await Windows::System::Launcher::LaunchUriAsync(item.ProjectUri());
+  if (launched == false)
+    spdlog::error("{}: {}", "MainWindow", "launch failed");
 }
 
 } // namespace winrt::CollectionTest::implementation
