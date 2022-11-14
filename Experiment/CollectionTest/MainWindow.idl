@@ -1,0 +1,11 @@
+import "MyItem1.idl";
+
+namespace CollectionTest {
+
+[default_interface] runtimeclass MainWindow : Microsoft.UI.Xaml.Window {
+  MainWindow();
+
+  IObservableVector<MyItem1> Item1Collection { get; };
+}
+
+} // namespace CollectionTest

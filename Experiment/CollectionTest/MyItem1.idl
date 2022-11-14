@@ -1,0 +1,8 @@
+namespace CollectionTest {
+
+runtimeclass MyItem1 : Microsoft.UI.Xaml.Data.INotifyPropertyChanged {
+  MyItem1(String name);
+  String Name;
+}
+
+} // namespace CollectionTest

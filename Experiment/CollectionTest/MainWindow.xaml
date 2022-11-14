@@ -1,0 +1,20 @@
+<Window
+    x:Class="CollectionTest.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CollectionTest"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <TextBlock Text="Hello" Margin="10"/>
+        <ListView ItemsSource="{x:Bind Item1Collection}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="local:MyItem1">
+                    <Button Content="{x:Bind Name, Mode=OneWay}" Click="on_button_clicked"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ListView>
+    </StackPanel>
+</Window>
