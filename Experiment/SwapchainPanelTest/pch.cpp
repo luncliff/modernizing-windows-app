@@ -37,6 +37,25 @@ void set_log_stream(const char* name) {
   spdlog::set_default_logger(logger);
 }
 
+
+std::wstring mb2w(std::string_view in) noexcept(false) {
+  std::wstring out{};
+  out.reserve(in.length());
+  const char* ptr = in.data();
+  const char* const end = in.data() + in.length();
+  mbstate_t state{};
+  wchar_t wc{};
+  while (size_t len = mbrtowc(&wc, ptr, end - ptr, &state)) {
+    if (len == static_cast<size_t>(-1)) // bad encoding
+      throw std::system_error{errno, std::system_category(), "mbrtowc"};
+    if (len == static_cast<size_t>(-2)) // valid but incomplete
+      break;                            // nothing to do more
+    out.push_back(wc);
+    ptr += len; // advance [1...n]
+  }
+  return out;
+}
+
 UINT CalculateConstantBufferByteSize(UINT byteSize) {
   // Constant buffer size is required to be aligned.
   return (byteSize + (D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT - 1)) &

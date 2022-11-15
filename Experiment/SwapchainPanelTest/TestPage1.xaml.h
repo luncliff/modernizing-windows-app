@@ -3,16 +3,20 @@
 
 #include "DeviceResources.h"
 
+#include <winrt/Microsoft.UI.Dispatching.h>
+
 namespace winrt::SwapchainPanelTest::implementation {
 using Microsoft::UI::Xaml::RoutedEventArgs;
 using Microsoft::UI::Xaml::SizeChangedEventArgs;
 using Microsoft::UI::Xaml::Input::TappedRoutedEventArgs;
+using Windows::Foundation::IAsyncAction;
 using Windows::Foundation::IInspectable;
 
 struct TestPage1 : TestPage1T<TestPage1> {
 private:
   winrt::com_ptr<ISwapChainPanelNative> native = nullptr;
   DeviceResources* device_resources = nullptr;
+  Microsoft::UI::Dispatching::DispatcherQueue foreground = nullptr;
 
 public:
   TestPage1();
@@ -22,6 +26,8 @@ public:
   void use(DeviceResources*) noexcept;
   void on_panel_size_changed(IInspectable const&, SizeChangedEventArgs const&);
   void on_panel_tapped(IInspectable const&, TappedRoutedEventArgs const&);
+  IAsyncAction shaderTextBlock_Tapped(IInspectable const&,
+                                      TappedRoutedEventArgs const&);
 };
 } // namespace winrt::SwapchainPanelTest::implementation
 

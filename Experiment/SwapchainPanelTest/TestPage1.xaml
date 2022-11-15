@@ -8,5 +8,16 @@
     mc:Ignorable="d"
     MinWidth="600" MinHeight="600">
     <SwapChainPanel x:Name="SwapchainPanel1" SizeChanged="on_panel_size_changed" Tapped="on_panel_tapped">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock x:Name="shaderTextBlock" Grid.Row="1" Grid.Column="2" Tapped="shaderTextBlock_Tapped"/>
     </SwapChainPanel>
 </Page>

@@ -18,6 +18,7 @@
 #include <winrt/Microsoft.UI.Xaml.h>
 #include <winrt/Microsoft.Windows.AppLifecycle.h>
 #include <winrt/Microsoft.Windows.ApplicationModel.Resources.h>
+#include <winrt/Microsoft.Windows.ApplicationModel.WindowsAppRuntime.h>
 #include <winrt/Windows.ApplicationModel.Activation.h>
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.Foundation.h>
@@ -40,6 +41,7 @@
 namespace winrt::SwapchainPanelTest {
 
 void set_log_stream(const char* name);
+std::wstring mb2w(std::string_view in) noexcept(false);
 
 void GetAssetsPath(WCHAR* path, UINT pathSize);
 
