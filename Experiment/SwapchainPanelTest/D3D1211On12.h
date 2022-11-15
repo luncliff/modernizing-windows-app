@@ -37,7 +37,6 @@ public:
   void PopulateCommandList();
   void WaitForGpu();
   void MoveToNextFrame();
-  void RenderUI();
   void GetHardwareAdapter(IDXGIFactory1* pFactory, IDXGIAdapter1** ppAdapter,
                           bool requestHighPerformanceAdapter);
 
@@ -57,12 +56,7 @@ private:
   winrt::com_ptr<ID3D11On12Device> m_d3d11On12Device;
   winrt::com_ptr<ID3D12Device> m_d3d12Device;
   winrt::com_ptr<IDWriteFactory> m_dWriteFactory;
-  winrt::com_ptr<ID2D1Factory3> m_d2dFactory;
-  winrt::com_ptr<ID2D1Device2> m_d2dDevice;
-  winrt::com_ptr<ID2D1DeviceContext2> m_d2dDeviceContext;
   winrt::com_ptr<ID3D12Resource> m_renderTargets[FrameCount];
-  winrt::com_ptr<ID3D11Resource> m_wrappedBackBuffers[FrameCount];
-  winrt::com_ptr<ID2D1Bitmap1> m_d2dRenderTargets[FrameCount];
   winrt::com_ptr<ID3D12CommandAllocator> m_commandAllocators[FrameCount];
   winrt::com_ptr<ID3D12CommandQueue> m_commandQueue;
   winrt::com_ptr<ID3D12RootSignature> m_rootSignature;
@@ -72,8 +66,6 @@ private:
 
   // App resources.
   UINT m_rtvDescriptorSize;
-  winrt::com_ptr<ID2D1SolidColorBrush> m_textBrush;
-  winrt::com_ptr<IDWriteTextFormat> m_textFormat;
   winrt::com_ptr<ID3D12Resource> m_vertexBuffer;
   D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
 

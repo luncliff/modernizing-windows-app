@@ -138,37 +138,6 @@ void D3D1211on12::LoadPipeline(HWND hwnd, UINT width, UINT height) {
   // Query the 11On12 device from the 11 device.
   winrt::check_hresult(d3d11Device->QueryInterface(m_d3d11On12Device.put()));
 
-  // Create D2D/DWrite components.
-  {
-    D2D1_DEVICE_CONTEXT_OPTIONS deviceOptions =
-        D2D1_DEVICE_CONTEXT_OPTIONS_NONE;
-    winrt::check_hresult(D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED,
-                                           d2dFactoryOptions,
-                                           m_d2dFactory.put()));
-    winrt::com_ptr<IDXGIDevice> dxgiDevice;
-    winrt::check_hresult(m_d3d11On12Device->QueryInterface(dxgiDevice.put()));
-    winrt::check_hresult(
-        m_d2dFactory->CreateDevice(dxgiDevice.get(), m_d2dDevice.put()));
-    winrt::check_hresult(m_d2dDevice->CreateDeviceContext(
-        deviceOptions, m_d2dDeviceContext.put()));
-    winrt::check_hresult(DWriteCreateFactory(
-        DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory),
-        reinterpret_cast<IUnknown**>(m_dWriteFactory.put())));
-  }
-
-  // Query the desktop's dpi settings, which will be used to create
-  // D2D's render targets.
-  float dpiX;
-  float dpiY;
-#pragma warning(push)
-#pragma warning(disable : 4996) // GetDesktopDpi is deprecated.
-  m_d2dFactory->GetDesktopDpi(&dpiX, &dpiY);
-#pragma warning(pop)
-  D2D1_BITMAP_PROPERTIES1 bitmapProperties = D2D1::BitmapProperties1(
-      D2D1_BITMAP_OPTIONS_TARGET | D2D1_BITMAP_OPTIONS_CANNOT_DRAW,
-      D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED),
-      dpiX, dpiY);
-
   // Create descriptor heaps.
   {
     // Describe and create a render target view (RTV) descriptor heap.
@@ -196,25 +165,6 @@ void D3D1211on12::LoadPipeline(HWND hwnd, UINT width, UINT height) {
                                             rtvHandle);
 
       NAME_D3D12_OBJECT_INDEXED(m_renderTargets, n);
-
-      // Create a wrapped 11On12 resource of this back buffer. Since we are
-      // rendering all D3D12 content first and then all D2D content, we specify
-      // the In resource state as RENDER_TARGET - because D3D12 will have last
-      // used it in this state - and the Out resource state as PRESENT. When
-      // ReleaseWrappedResources() is called on the 11On12 device, the resource
-      // will be transitioned to the PRESENT state.
-      D3D11_RESOURCE_FLAGS d3d11Flags = {D3D11_BIND_RENDER_TARGET};
-      winrt::check_hresult(m_d3d11On12Device->CreateWrappedResource(
-          m_renderTargets[n].get(), &d3d11Flags,
-          D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT,
-          IID_PPV_ARGS(&m_wrappedBackBuffers[n])));
-
-      // Create a render target for D2D to draw directly to this back buffer.
-      winrt::com_ptr<IDXGISurface> surface;
-      winrt::check_hresult(
-          m_wrappedBackBuffers[n]->QueryInterface(surface.put()));
-      winrt::check_hresult(m_d2dDeviceContext->CreateBitmapFromDxgiSurface(
-          surface.get(), &bitmapProperties, m_d2dRenderTargets[n].put()));
 
       rtvHandle.Offset(1, m_rtvDescriptorSize);
 
@@ -297,19 +247,6 @@ void D3D1211on12::LoadAssets() {
       m_commandAllocators[m_frameIndex].get(), m_pipelineState.get(),
       IID_PPV_ARGS(&m_commandList)));
   NAME_D3D12_OBJECT(m_commandList);
-
-  // Create D2D/DWrite objects for rendering text.
-  {
-    winrt::check_hresult(m_d2dDeviceContext->CreateSolidColorBrush(
-        D2D1::ColorF(D2D1::ColorF::Black), m_textBrush.put()));
-    winrt::check_hresult(m_dWriteFactory->CreateTextFormat(
-        L"Verdana", NULL, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL,
-        DWRITE_FONT_STRETCH_NORMAL, 50, L"en-us", m_textFormat.put()));
-    winrt::check_hresult(
-        m_textFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER));
-    winrt::check_hresult(
-        m_textFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER));
-  }
 
   // Note: ComPtr's are CPU objects but this resource needs to stay in scope
   // until the command list that references it has finished executing on the
@@ -395,24 +332,18 @@ void D3D1211on12::OnUpdate() {
 
 // Render the scene.
 void D3D1211on12::OnRender() {
-  PIXBeginEvent(m_commandQueue.get(), 0, L"Render 3D");
-
-  // Record all the commands we need to render the scene into the command list.
-  PopulateCommandList();
-
-  // Execute the command list.
-  ID3D12CommandList* ppCommandLists[] = {m_commandList.get()};
-  m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-
-  PIXEndEvent(m_commandQueue.get());
-
-  PIXBeginEvent(m_commandQueue.get(), 0, L"Render UI");
-  RenderUI();
-  PIXEndEvent(m_commandQueue.get());
-
+  {
+    PIXBeginEvent(m_commandQueue.get(), 0, L"Render");
+    // Record all the commands we need to render the scene
+    //  into the command list.
+    PopulateCommandList();
+    // Execute the command list.
+    ID3D12CommandList* lists[1]{m_commandList.get()};
+    m_commandQueue->ExecuteCommandLists(1, lists);
+    PIXEndEvent(m_commandQueue.get());
+  }
   // Present the frame.
   winrt::check_hresult(m_swapChain->Present(1, 0));
-
   MoveToNextFrame();
 }
 
@@ -464,33 +395,6 @@ void D3D1211on12::PopulateCommandList() {
   // target resource is released.
 
   winrt::check_hresult(m_commandList->Close());
-}
-
-// Render text over D3D12 using D2D via the 11On12 device.
-void D3D1211on12::RenderUI() {
-  D2D1_SIZE_F rtSize = m_d2dRenderTargets[m_frameIndex]->GetSize();
-  D2D1_RECT_F textRect = D2D1::RectF(0, 0, rtSize.width, rtSize.height);
-  static const WCHAR text[] = L"11On12";
-
-  ID3D11Resource* res = m_wrappedBackBuffers[m_frameIndex].get();
-  // Acquire our wrapped render target resource for the current back buffer.
-  m_d3d11On12Device->AcquireWrappedResources(&res, 1);
-
-  // Render text directly to the back buffer.
-  m_d2dDeviceContext->SetTarget(m_d2dRenderTargets[m_frameIndex].get());
-  m_d2dDeviceContext->BeginDraw();
-  m_d2dDeviceContext->SetTransform(D2D1::Matrix3x2F::Identity());
-  m_d2dDeviceContext->DrawText(text, _countof(text) - 1, m_textFormat.get(),
-                               &textRect, m_textBrush.get());
-  winrt::check_hresult(m_d2dDeviceContext->EndDraw());
-
-  // Release our wrapped render target resource. Releasing
-  // transitions the back buffer resource to the state specified
-  // as the OutState when the wrapped resource was created.
-  m_d3d11On12Device->ReleaseWrappedResources(&res, 1);
-
-  // Flush to submit the 11 command list to the shared command queue.
-  m_d3d11DeviceContext->Flush();
 }
 
 // Wait for pending GPU work to complete.
