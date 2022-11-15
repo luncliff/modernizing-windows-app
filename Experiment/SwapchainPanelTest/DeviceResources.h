@@ -1,8 +1,15 @@
 #pragma once
+#include <D3Dcompiler.h>
+#include <DirectXMath.h>
 #include <concrt.h>
+#include <d2d1_3.h>
 #include <d3d11_4.h>
 #include <d3d11on12.h>
+#include <d3d12.h>
+#include <dwrite.h>
 #include <dxgi1_6.h>
+#include <pix.h>
+#include <shellapi.h>
 
 #include <winrt/Microsoft.Graphics.DirectX.h>
 #include <winrt/Microsoft.UI.Composition.Interop.h>

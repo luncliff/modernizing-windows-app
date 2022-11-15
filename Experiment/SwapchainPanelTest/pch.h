@@ -40,7 +40,4 @@ namespace winrt::SwapchainPanelTest {
 
 void set_log_stream(const char* name);
 
-std::string to_hex_string(HRESULT hr) noexcept;
-std::string to_guid_string(const GUID& guid) noexcept;
-
 } // namespace winrt::SwapchainPanelTest

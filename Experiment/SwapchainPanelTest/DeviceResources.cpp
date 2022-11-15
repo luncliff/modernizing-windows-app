@@ -22,6 +22,10 @@ DeviceResources::DeviceResources() noexcept(false) {
                   winrt::to_string(winrt::hresult_error{hr}.message()));
     winrt::throw_hresult(hr);
   }
+  if (level >= D3D_FEATURE_LEVEL_12_0) {
+    winrt::com_ptr<ID3D12Device> device12 = nullptr;
+    // ...
+  }
   UpdateDevice(device, device_context);
 }
 
