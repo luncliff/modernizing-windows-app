@@ -1,5 +1,6 @@
 ﻿using Binding.Models;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -35,6 +36,14 @@ namespace Binding
         public void DoSomething()
         {
             Debug.WriteLine("Do something");
+        }
+
+        private void Name_Tapped(object sender, Microsoft.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            var tb = sender as TextBlock;
+            var idx = lstPeople.SelectedIndex;
+            var person = lstPeople.SelectedItem as Person;
+            Debug.WriteLine("tapped: {0}, index: {1}, person: {2}", tb.Text, idx, person.BirthDate);
         }
     }
 }

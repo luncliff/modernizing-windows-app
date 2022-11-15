@@ -23,7 +23,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:Person">
                     <StackPanel Background="{x:Bind helpers:BudgetColorHandler.GetBudgetColor(Budget, Stocks)}">
-                        <TextBlock Text="{x:Bind Path=Name}" />
+                        <TextBlock Text="{x:Bind Path=Name}" Tapped="Name_Tapped" />
                         <TextBlock Text="{x:Bind Path=Surname}" />
                         <TextBlock Text="{x:Bind Path=helpers:DateTimeHandler.ConvertToShortDate(BirthDate)}" />
                     </StackPanel>
