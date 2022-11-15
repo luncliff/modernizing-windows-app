@@ -2,6 +2,14 @@
 
 #include "D3D1211On12.h"
 
+namespace winrt::SwapchainPanelTest {
+
+// Naming helper for winrt::com_ptr<T>.
+// Assigns the name of the variable as the name of the object.
+// The indexed variant will include the index in the name of the object.
+#define NAME_D3D12_OBJECT(x) SetName((x).get(), L#x)
+#define NAME_D3D12_OBJECT_INDEXED(x, n) SetNameIndexed((x)[n].get(), L#x, n)
+
 void D3D1211on12::OnInit(HWND hwnd, UINT width, UINT height) {
   m_viewport = CD3DX12_VIEWPORT(0.0f, 0.0f, static_cast<float>(width), //
                                 static_cast<float>(height));
@@ -584,3 +592,5 @@ D3D1211on12::GetHardwareAdapter(IDXGIFactory1* pFactory,
   *ppAdapter = adapter.get();
   adapter->AddRef();
 }
+
+} // namespace winrt::SwapchainPanelTest

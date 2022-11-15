@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include <d3d12.h>
 
 #undef GetCurrentTime
 #include <winrt/Microsoft.UI.Composition.h>
@@ -39,5 +40,19 @@
 namespace winrt::SwapchainPanelTest {
 
 void set_log_stream(const char* name);
+
+void GetAssetsPath(WCHAR* path, UINT pathSize);
+
+HRESULT ReadDataFromFile(LPCWSTR filename, byte** data, UINT* size);
+
+HRESULT ReadDataFromDDSFile(LPCWSTR filename, byte** data, UINT* offset,
+                            UINT* size);
+
+void SetName(ID3D12Object* pObject, LPCWSTR name);
+void SetNameIndexed(ID3D12Object* pObject, LPCWSTR name, UINT index);
+winrt::com_ptr<ID3DBlob> CompileShader(const std::wstring& filename,
+                                       const D3D_SHADER_MACRO* defines,
+                                       const std::string& entrypoint,
+                                       const std::string& target);
 
 } // namespace winrt::SwapchainPanelTest

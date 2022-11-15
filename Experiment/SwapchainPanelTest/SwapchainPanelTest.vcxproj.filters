@@ -21,7 +21,6 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="D3D1211On12.h" />
-    <ClInclude Include="DXSampleHelper.h" />
     <ClInclude Include="D3D12Helper.h" />
   </ItemGroup>
   <ItemGroup>

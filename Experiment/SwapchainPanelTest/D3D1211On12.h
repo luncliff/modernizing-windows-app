@@ -11,8 +11,9 @@
 
 #pragma once
 #include "D3D12Helper.h"
-#include "DXSampleHelper.h"
 #include "DeviceResources.h"
+
+namespace winrt::SwapchainPanelTest {
 
 using namespace DirectX;
 
@@ -30,6 +31,15 @@ public:
   virtual void OnUpdate();
   virtual void OnRender();
   virtual void OnDestroy();
+
+  void LoadPipeline(HWND hwnd, UINT width, UINT height);
+  void LoadAssets();
+  void PopulateCommandList();
+  void WaitForGpu();
+  void MoveToNextFrame();
+  void RenderUI();
+  void GetHardwareAdapter(IDXGIFactory1* pFactory, IDXGIAdapter1** ppAdapter,
+                          bool requestHighPerformanceAdapter);
 
 private:
   static const UINT FrameCount = 3;
@@ -72,13 +82,6 @@ private:
   HANDLE m_fenceEvent;
   winrt::com_ptr<ID3D12Fence> m_fence;
   UINT64 m_fenceValues[FrameCount];
-
-  void LoadPipeline(HWND hwnd, UINT width, UINT height);
-  void LoadAssets();
-  void PopulateCommandList();
-  void WaitForGpu();
-  void MoveToNextFrame();
-  void RenderUI();
-  void GetHardwareAdapter(IDXGIFactory1* pFactory, IDXGIAdapter1** ppAdapter,
-                          bool requestHighPerformanceAdapter);
 };
+
+} // namespace winrt::SwapchainPanelTest
