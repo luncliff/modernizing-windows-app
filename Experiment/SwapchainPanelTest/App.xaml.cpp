@@ -28,12 +28,12 @@ void App::OnLaunched(LaunchActivatedEventArgs const&) {
   set_log_stream("App");
 
   spdlog::info("{}: {}", "App.OnLaunched", "creating resources");
-  gpu_resources = std::make_unique<GPUResources>();
+  device_resources = std::make_unique<DeviceResources>();
 
   spdlog::info("{}: {}", "App.OnLaunched", "creating windows/pages");
   window = make<implementation::MainWindow>();
   if (auto w = window.as<implementation::MainWindow>(); w) {
-    w->use(gpu_resources.get());
+    w->use(device_resources.get());
   }
   window.Activate();
 }

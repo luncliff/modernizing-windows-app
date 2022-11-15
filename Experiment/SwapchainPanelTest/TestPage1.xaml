@@ -7,6 +7,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     MinWidth="600" MinHeight="600">
-    <SwapChainPanel x:Name="SwapchainPanel1" SizeChanged="on_panel_size_changed">
+    <SwapChainPanel x:Name="SwapchainPanel1" SizeChanged="on_panel_size_changed" >
     </SwapChainPanel>
 </Page>

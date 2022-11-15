@@ -1,7 +1,7 @@
 #pragma once
 #include "App.xaml.g.h"
 
-#include "GPUResources.h"
+#include "DeviceResources.h"
 
 namespace winrt::SwapchainPanelTest::implementation {
 using Microsoft::UI::Xaml::LaunchActivatedEventArgs;
@@ -19,7 +19,7 @@ struct App : AppT<App> {
                               UnhandledExceptionEventArgs const& e);
 
 private:
-  std::unique_ptr<GPUResources> gpu_resources = nullptr;
+  std::unique_ptr<DeviceResources> device_resources = nullptr;
   Window window = nullptr;
 };
 

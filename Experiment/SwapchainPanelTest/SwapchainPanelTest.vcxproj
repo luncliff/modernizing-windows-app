@@ -126,7 +126,7 @@
     <Manifest Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GPUResources.h" />
+    <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
@@ -147,7 +147,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GPUResources.cpp" />
+    <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

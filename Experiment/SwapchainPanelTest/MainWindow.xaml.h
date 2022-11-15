@@ -1,7 +1,7 @@
 #pragma once
 #include "MainWindow.g.h"
 
-#include "GPUResources.h"
+#include "DeviceResources.h"
 
 namespace winrt::SwapchainPanelTest::implementation {
 using Microsoft::UI::Xaml::RoutedEventArgs;
@@ -25,7 +25,7 @@ public:
 
   Page GetPage1();
 
-  void use(GPUResources*) noexcept;
+  void use(DeviceResources*) noexcept;
   void on_window_size_changed(IInspectable const& sender,
                               WindowSizeChangedEventArgs const& e);
   void on_window_visibility_changed(IInspectable const& sender,
@@ -36,7 +36,7 @@ public:
                          NavigationViewBackRequestedEventArgs const&);
 
 private:
-  GPUResources* gpu_resources = nullptr;
+  DeviceResources* device_resources = nullptr;
   Page page1 = nullptr;
 };
 

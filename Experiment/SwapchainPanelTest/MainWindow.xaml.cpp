@@ -6,13 +6,16 @@
 #endif
 #include "TestPage1.xaml.h"
 
+#include <microsoft.ui.xaml.window.h>
+
 namespace winrt::SwapchainPanelTest::implementation {
 using Windows::UI::Xaml::Interop::TypeKind;
 using Windows::UI::Xaml::Interop::TypeName;
 
 MainWindow::MainWindow() {
   InitializeComponent();
-  // see https://learn.microsoft.com/en-us/windows/apps/develop/ui-input/retrieve-hwnd
+  // see
+  // https://learn.microsoft.com/en-us/windows/apps/develop/ui-input/retrieve-hwnd
   auto native = this->try_as<::IWindowNative>();
   if (auto hr = native->get_WindowHandle(&hwnd); FAILED(hr))
     winrt::throw_hresult(hr);
@@ -26,11 +29,14 @@ Page MainWindow::GetPage1() {
   return page1;
 }
 
-void MainWindow::use(GPUResources* ptr) noexcept {
+void MainWindow::use(DeviceResources* ptr) noexcept {
+  if (ptr == nullptr)
+    throw winrt::hresult_invalid_argument{};
+
   spdlog::info("{}: {}", "MainWindow", "updating GPUResources");
-  gpu_resources = ptr;
+  device_resources = ptr;
   if (auto p = page1.as<implementation::TestPage1>(); p) {
-    p->use(gpu_resources);
+    p->use(device_resources);
   }
 }
 
