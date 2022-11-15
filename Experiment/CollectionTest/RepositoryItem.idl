@@ -1,0 +1,17 @@
+namespace CollectionTest {
+
+runtimeclass RepositoryItem : Microsoft.UI.Xaml.Data.INotifyPropertyChanged {
+  RepositoryItem();
+
+  String Owner;
+  String Name;
+
+  String ProjectUriString {
+    get;
+  };
+  Windows.Foundation.Uri ProjectUri {
+    get;
+  };
+}
+
+} // namespace CollectionTest

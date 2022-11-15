@@ -1,0 +1,13 @@
+import "RepositoryViewModel.idl";
+
+namespace CollectionTest {
+
+[default_interface] runtimeclass MainWindow : Microsoft.UI.Xaml.Window {
+  MainWindow();
+
+  RepositoryViewModel FirstViewModel {
+    get;
+  };
+}
+
+} // namespace CollectionTest
