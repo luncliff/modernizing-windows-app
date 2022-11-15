@@ -71,7 +71,7 @@ install:
 
 before_build:
   - ps: New-Item -Type Directory -Force -Path "${env:VCPKG_DEFAULT_BINARY_CACHE}"
-  - ps: vcpkg install --triplet=x64-windows spdlog
+  - ps: vcpkg install --triplet=x64-windows spdlog directxtk directxtex directxmesh
   - ps: vcpkg integrate project
 
 build:

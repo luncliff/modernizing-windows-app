@@ -6,6 +6,7 @@
 namespace winrt::SwapchainPanelTest::implementation {
 using Microsoft::UI::Xaml::RoutedEventArgs;
 using Microsoft::UI::Xaml::SizeChangedEventArgs;
+using Microsoft::UI::Xaml::Input::TappedRoutedEventArgs;
 using Windows::Foundation::IInspectable;
 
 struct TestPage1 : TestPage1T<TestPage1> {
@@ -16,11 +17,11 @@ private:
 public:
   TestPage1();
 
-  void PausePage();
-  void ResumePage();
+  void Clear();
 
   void use(DeviceResources*) noexcept;
   void on_panel_size_changed(IInspectable const&, SizeChangedEventArgs const&);
+  void on_panel_tapped(IInspectable const&, TappedRoutedEventArgs const&);
 };
 } // namespace winrt::SwapchainPanelTest::implementation
 
