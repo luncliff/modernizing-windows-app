@@ -24,44 +24,50 @@ void D3D1211on12::OnInit(HWND hwnd, UINT width, UINT height) {
 void D3D1211on12::LoadPipeline(HWND hwnd, UINT width, UINT height) {
   UINT dxgiFactoryFlags = 0;
   UINT d3d11DeviceFlags = D3D11_CREATE_DEVICE_BGRA_SUPPORT;
-  D2D1_FACTORY_OPTIONS d2dFactoryOptions = {};
 
 #if defined(_DEBUG)
   // Enable the debug layer (requires the Graphics Tools "optional feature").
   // NOTE: Enabling the debug layer after device creation will invalidate the
   // active device.
   {
-    winrt::com_ptr<ID3D12Debug> debugController;
-    if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
+    if (auto hr = D3D12GetDebugInterface(__uuidof(ID3D12Debug),
+                                         debugController.put_void());
+        SUCCEEDED(hr)) {
       debugController->EnableDebugLayer();
 
       // Enable additional debug layers.
       dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
       d3d11DeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-      d2dFactoryOptions.debugLevel = D2D1_DEBUG_LEVEL_INFORMATION;
     }
   }
 #endif
 
   winrt::com_ptr<IDXGIFactory4> factory;
-  winrt::check_hresult(
-      CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
+  if (auto hr = CreateDXGIFactory2(dxgiFactoryFlags, __uuidof(IDXGIFactory4),
+                                   factory.put_void());
+      FAILED(hr))
+    winrt::check_hresult(hr);
 
   if (false) {
     winrt::com_ptr<IDXGIAdapter> warpAdapter;
-    winrt::check_hresult(factory->EnumWarpAdapter(__uuidof(IDXGIAdapter),
-                                                  warpAdapter.put_void()));
+    if (auto hr = factory->EnumWarpAdapter(__uuidof(IDXGIAdapter),
+                                           warpAdapter.put_void());
+        FAILED(hr))
+      winrt::check_hresult(hr);
 
-    winrt::check_hresult(D3D12CreateDevice(warpAdapter.get(),
-                                           D3D_FEATURE_LEVEL_11_0,
-                                           IID_PPV_ARGS(&m_d3d12Device)));
+    if (auto hr = D3D12CreateDevice(warpAdapter.get(), D3D_FEATURE_LEVEL_11_0,
+                                    IID_PPV_ARGS(&m_d3d12Device));
+        FAILED(hr))
+      winrt::check_hresult(hr);
   } else {
     winrt::com_ptr<IDXGIAdapter1> hardwareAdapter;
     GetHardwareAdapter(factory.get(), hardwareAdapter.put(), true);
 
-    winrt::check_hresult(D3D12CreateDevice(hardwareAdapter.get(),
-                                           D3D_FEATURE_LEVEL_11_0,
-                                           IID_PPV_ARGS(&m_d3d12Device)));
+    if (auto hr =
+            D3D12CreateDevice(hardwareAdapter.get(), D3D_FEATURE_LEVEL_11_0,
+                              IID_PPV_ARGS(&m_d3d12Device));
+        FAILED(hr))
+      winrt::check_hresult(hr);
   }
 
 #if defined(_DEBUG)

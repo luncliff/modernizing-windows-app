@@ -75,32 +75,44 @@ void TestPage1::use(DeviceResources* ptr) noexcept {
 }
 
 void TestPage1::Clear() {
-  auto context = device_resources->device_context;
-  auto render_target = device_resources->render_target;
-
-  float color[4]{0, 0, 0, 0};
-  context->ClearRenderTargetView(render_target.get(), color);
-  context->OMSetRenderTargets(1, render_target.put(), nullptr);
-
-  // auto viewport = device_resource->GetScreenViewport();
-  // context->RSSetViewports(1, &viewport);
+  // ...
 }
 
 void TestPage1::on_panel_size_changed(IInspectable const&,
                                       SizeChangedEventArgs const& e) {
   auto s = e.NewSize();
-  spdlog::info("{}: width {:.3f} height {:.3f}", "TestPage1", s.Width,
-               s.Height);
+  spdlog::info("{}: w {:.3f} h {:.3f}", "TestPage1", s.Width, s.Height);
   device_resources->UpdateWindowSizeDependentResources(s);
-  if (auto hr = native->SetSwapChain(device_resources->swapchain.get());
-      FAILED(hr))
-    winrt::throw_hresult(hr);
 }
 
 void TestPage1::on_panel_tapped(IInspectable const&,
                                 TappedRoutedEventArgs const&) {
   // clear ...
+  const float c = []() {
+    LARGE_INTEGER counter{};
+    QueryPerformanceCounter(&counter);
+    return (sinf(static_cast<float>(counter.LowPart)) / 2 + 0.5f);
+  }();
+  XMFLOAT4 color{0, c, c, 1};
+  if (device_resources->Clear(color) == false)
+    spdlog::debug("{}: {}", "TestPage1", "clear failed");
   // present ...
+  if (auto hr = device_resources->swapchain->Present(1, 0); FAILED(hr))
+    spdlog::info("{}: {}", "TestPage1", winrt::hresult{hr});
+}
+
+void TestPage1::SwapchainPanel1_PointerEntered(
+    IInspectable const& sender, PointerRoutedEventArgs const& e) {
+  spdlog::debug("{}: mouse {}", "TestPage1", "entered");
+}
+
+void TestPage1::SwapchainPanel1_PointerMoved(IInspectable const& sender,
+                                             PointerRoutedEventArgs const& e) {
+}
+
+void TestPage1::SwapchainPanel1_PointerExited(IInspectable const& sender,
+                                              PointerRoutedEventArgs const& e) {
+  spdlog::debug("{}: mouse {}", "TestPage1", "exited");
 }
 
 } // namespace winrt::SwapchainPanelTest::implementation

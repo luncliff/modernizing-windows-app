@@ -25,6 +25,7 @@
 
 namespace winrt::SwapchainPanelTest {
 
+using DirectX::XMFLOAT4;
 using Microsoft::UI::Xaml::Controls::SwapChainPanel;
 using Windows::Graphics::Display::DisplayOrientations;
 
@@ -34,13 +35,15 @@ public:
   winrt::com_ptr<ID3D11DeviceContext> device_context = nullptr;
   winrt::com_ptr<IDXGIFactory2> dxgi_factory = nullptr;
   winrt::com_ptr<ISwapChainPanelNative> bridge = nullptr;
-  winrt::com_ptr<IDXGISwapChain1> swapchain = nullptr;
+  winrt::com_ptr<IDXGISwapChain3> swapchain = nullptr;
   winrt::com_ptr<ID3D11RenderTargetView> render_target = nullptr;
   winrt::com_ptr<ID3D11Texture2D> render_target_texture = nullptr;
 
 public:
   DeviceResources() noexcept(false);
   ~DeviceResources() noexcept;
+
+  bool Clear(XMFLOAT4 color);
 
   void SetSwapChainPanel(SwapChainPanel panel) noexcept(false);
   void SetCurrentOrientation(DisplayOrientations orientation);

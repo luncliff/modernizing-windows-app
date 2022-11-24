@@ -7,7 +7,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     MinWidth="600" MinHeight="600">
-    <SwapChainPanel x:Name="SwapchainPanel1" SizeChanged="on_panel_size_changed" Tapped="on_panel_tapped">
+    <SwapChainPanel x:Name="SwapchainPanel1" SizeChanged="on_panel_size_changed" Tapped="on_panel_tapped"
+                    PointerEntered="SwapchainPanel1_PointerEntered" 
+                    PointerMoved="SwapchainPanel1_PointerMoved"
+                    PointerExited="SwapchainPanel1_PointerExited"
+                    >
         <Grid.RowDefinitions>
             <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>

@@ -33,6 +33,15 @@ DeviceResources::~DeviceResources() noexcept {
   // spdlog::warn("{}: {}", "DeviceResources", "Releasing DirectX resources");
 }
 
+bool DeviceResources::Clear(XMFLOAT4 color) {
+  if (render_target == nullptr)
+    return false;
+  device_context->ClearRenderTargetView(render_target.get(),
+                                        reinterpret_cast<float*>(&color));
+  //device_context->ClearDepthStencilView(nullptr, D3D11_CLEAR_DEPTH, 1.0f, 0);
+  return true;
+}
+
 void DeviceResources::SetSwapChainPanel(SwapChainPanel panel) noexcept(false) {
   IUnknown* unknown = winrt::get_unknown(panel);
   if (unknown == nullptr)
@@ -67,8 +76,9 @@ void DeviceResources::UpdateDevice(
   if (auto hr = dxgi->GetParent(__uuidof(IDXGIAdapter), adapter.put_void());
       FAILED(hr))
     winrt::throw_hresult(hr);
-  if (auto hr =
-          adapter->GetParent(__uuidof(IDXGIFactory2), dxgi_factory.put_void());
+  dxgi_factory = nullptr;
+  if (auto hr = adapter->GetParent(__uuidof(IDXGIFactory2), //
+                                   dxgi_factory.put_void());
       FAILED(hr))
     winrt::throw_hresult(hr);
 }
@@ -88,8 +98,9 @@ void DeviceResources::UpdateRenderTarget() noexcept(false) {
 
 void DeviceResources::UpdateWindowSizeDependentResources(
     Windows::Foundation::Size size) noexcept(false) {
-  ID3D11RenderTargetView* targets0[1]{nullptr};
-  device_context->OMSetRenderTargets(1, targets0, nullptr); // no depth, stencil
+  std::array<ID3D11RenderTargetView*, 1> targets0{};
+  // no depth, stencil
+  device_context->OMSetRenderTargets(targets0.size(), targets0.data(), nullptr);
 
   // Match the size,format of the window...
   DXGI_SWAP_CHAIN_DESC1 desc{};
@@ -124,20 +135,22 @@ void DeviceResources::UpdateWindowSizeDependentResources(
     desc.Scaling = DXGI_SCALING_STRETCH;
     desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 
+    winrt::com_ptr<IDXGISwapChain1> swapchain1 = nullptr;
     if (auto hr = dxgi_factory->CreateSwapChainForComposition(
-            device.get(), &desc, nullptr, swapchain.put());
+            device.get(), &desc, nullptr, swapchain1.put());
         FAILED(hr))
       winrt::throw_hresult(hr);
     spdlog::info("{}: {}", "DeviceResources", "created swapchain");
 
+    if (auto hr = swapchain1->QueryInterface(swapchain.put()); FAILED(hr))
+      winrt::throw_hresult(hr);
     if (auto hr = bridge->SetSwapChain(swapchain.get()); FAILED(hr))
       winrt::throw_hresult(hr);
     spdlog::info("{}: {}", "DeviceResources", "updated swapchain");
   }
 
   // OK. Acquire the render target handles
-  UpdateRenderTarget();
-  return;
+  return UpdateRenderTarget();
 }
 
 void DeviceResources::SetCurrentOrientation(

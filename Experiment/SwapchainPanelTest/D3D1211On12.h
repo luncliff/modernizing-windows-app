@@ -48,6 +48,9 @@ private:
     XMFLOAT4 color;
   };
 
+  // Debug objects.
+  winrt::com_ptr<ID3D12Debug> debugController;
+
   // Pipeline objects.
   CD3DX12_VIEWPORT m_viewport;
   CD3DX12_RECT m_scissorRect;
