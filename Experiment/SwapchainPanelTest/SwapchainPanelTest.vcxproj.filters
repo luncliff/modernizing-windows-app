@@ -16,12 +16,14 @@
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
     <ClCompile Include="DeviceResources.cpp" />
     <ClCompile Include="D3D1211On12.cpp" />
+    <ClCompile Include="StepTimer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="DeviceResources.h" />
     <ClInclude Include="D3D1211On12.h" />
     <ClInclude Include="D3D12Helper.h" />
+    <ClInclude Include="StepTimer.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">

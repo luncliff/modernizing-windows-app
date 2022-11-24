@@ -136,6 +136,7 @@
     <ClInclude Include="MainWindow.xaml.h">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="StepTimer.h" />
     <ClInclude Include="TestPage1.xaml.h">
       <DependentUpon>TestPage1.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -161,6 +162,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="StepTimer.cpp" />
     <ClCompile Include="TestPage1.xaml.cpp">
       <DependentUpon>TestPage1.xaml</DependentUpon>
       <SubType>Code</SubType>
