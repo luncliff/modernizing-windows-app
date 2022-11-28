@@ -9,6 +9,8 @@
 #include <winrt/Windows.Storage.Streams.h>
 #include <winrt/Windows.Storage.h>
 
+#include "StepTimer.h"
+
 namespace winrt::SwapchainPanelTest::implementation {
 using namespace Microsoft::UI::Xaml;
 using Windows::Storage::Streams::InputStreamOptions;
@@ -126,10 +128,9 @@ void TestPage1::on_panel_size_changed(IInspectable const&,
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
     desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    desc.BufferCount = 2; // Use double-buffering to minimize latency.
-    desc.SwapEffect =
-        DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // All Windows Store apps must use
-                                          // this SwapEffect.
+    desc.BufferCount = num_frames;
+    // All Windows Store apps must use this SwapEffect.
+    desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
     desc.Flags = 0;
     desc.Scaling = DXGI_SCALING_STRETCH;
     desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
@@ -178,6 +179,9 @@ void TestPage1::update_render_target(ID3D11Device* device) {
 void TestPage1::on_panel_tapped(IInspectable const&,
                                 TappedRoutedEventArgs const&) {
   this->Clear();
+  D3D11_TEXTURE2D_DESC desc{};
+  render_target_texture->GetDesc(&desc);
+  spdlog::debug("{}: {:X}", "TestPage1", desc.CPUAccessFlags);
 }
 
 void TestPage1::update_frame_index() noexcept(false) {
@@ -226,11 +230,18 @@ void TestPage1::wait_for_gpu() noexcept(false) {
 
 IAsyncAction TestPage1::StartUpdate() {
   using namespace std::chrono_literals;
+
   auto token = co_await winrt::get_cancellation_token();
   co_await winrt::resume_background();
+
+  StepTimer step{};
+  step.SetFixedTimeStep(true);
+  step.SetTargetElapsedSeconds(1); // call update per 1 second
+
   while (token() == false) {
     std::this_thread::sleep_for(10ms);
     this->Clear();
+    step.Tick([](void*) { spdlog::debug("{}: {}", "TestPage1", "tick"); });
   }
 }
 

@@ -69,7 +69,7 @@ void StepTimer::ResetElapsedTime() noexcept {
   m_qpcSecondCounter = 0;
 }
 
-void StepTimer::Tick(LPUPDATEFUNC update) noexcept {
+void StepTimer::Tick(LPUPDATEFUNC update, void* context) noexcept {
   // Query the current time.
   LARGE_INTEGER currentTime;
 
@@ -118,7 +118,7 @@ void StepTimer::Tick(LPUPDATEFUNC update) noexcept {
       m_frameCount++;
 
       if (update) {
-        update();
+        update(context);
       }
     }
   } else {
@@ -129,7 +129,7 @@ void StepTimer::Tick(LPUPDATEFUNC update) noexcept {
     m_frameCount++;
 
     if (update) {
-      update();
+      update(context);
     }
   }
 

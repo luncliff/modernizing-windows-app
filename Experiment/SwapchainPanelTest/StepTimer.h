@@ -47,11 +47,11 @@ public:
 
   void ResetElapsedTime() noexcept;
 
-  typedef void (*LPUPDATEFUNC)(void);
+  typedef void (*LPUPDATEFUNC)(void*);
 
   // Update timer state, calling the specified Update function the appropriate
   // number of times.
-  void Tick(LPUPDATEFUNC update = nullptr) noexcept;
+  void Tick(LPUPDATEFUNC update = nullptr, void* context = nullptr) noexcept;
 
 private:
   // Source timing data uses QPC units.
