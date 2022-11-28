@@ -8,7 +8,7 @@
     mc:Ignorable="d">
     <NavigationView x:Name="navigationView"
                     ItemInvoked="on_item_invoked" IsBackEnabled="{x:Bind ShellFrame.CanGoBack, Mode=OneWay}"
-                    BackRequested="on_back_requested" IsSettingsVisible="True" Background="DimGray">
+                    BackRequested="on_back_requested" IsSettingsVisible="True">
         <NavigationView.MenuItems>
             <NavigationViewItem Content="TestPage1" Icon="Pictures" Tag="TestPage1" />
         </NavigationView.MenuItems>
