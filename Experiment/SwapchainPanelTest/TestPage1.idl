@@ -4,6 +4,7 @@ namespace SwapchainPanelTest {
 [default_interface] runtimeclass TestPage1 : Microsoft.UI.Xaml.Controls.Page {
   TestPage1();
 
+  void SetSwapChainPanel(Microsoft.UI.Xaml.Controls.SwapChainPanel panel);
   void Clear();
 }
 

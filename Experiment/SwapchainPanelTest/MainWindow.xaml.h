@@ -1,7 +1,7 @@
 #pragma once
 #include "MainWindow.g.h"
 
-#include "DeviceResources.h"
+#include "DeviceProvider.h"
 
 namespace winrt::SwapchainPanelTest::implementation {
 using Microsoft::UI::Xaml::RoutedEventArgs;
@@ -25,7 +25,7 @@ public:
 
   Page GetPage1();
 
-  void use(DeviceResources*) noexcept;
+  void use(DXGIProvider*, DeviceProvider*) noexcept;
   void on_window_size_changed(IInspectable const& sender,
                               WindowSizeChangedEventArgs const& e);
   void on_window_visibility_changed(IInspectable const& sender,
@@ -36,7 +36,8 @@ public:
                          NavigationViewBackRequestedEventArgs const&);
 
 private:
-  DeviceResources* device_resources = nullptr;
+  DXGIProvider* dxgi = nullptr;
+  DeviceProvider* devices = nullptr;
   Page page1 = nullptr;
 };
 

@@ -126,9 +126,9 @@
     <Manifest Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D3D1211On12.h" />
     <ClInclude Include="D3D12Helper.h" />
-    <ClInclude Include="DeviceResources.h" />
+    <ClInclude Include="DeviceProvider.h" />
+    <ClInclude Include="DXGIProvider.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
@@ -150,8 +150,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D3D1211On12.cpp" />
-    <ClCompile Include="DeviceResources.cpp" />
+    <ClCompile Include="DeviceProvider.cpp" />
+    <ClCompile Include="DXGIProvider.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

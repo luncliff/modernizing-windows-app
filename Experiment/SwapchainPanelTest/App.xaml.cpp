@@ -7,6 +7,7 @@ namespace winrt::SwapchainPanelTest::implementation {
 using namespace std::placeholders;
 
 App::App() {
+  set_log_stream("App");
   InitializeComponent();
   // ...
   UnhandledException(std::bind(&App::on_unhandled_exception, this, _1, _2));
@@ -25,15 +26,10 @@ void App::on_unhandled_exception(IInspectable const&,
 }
 
 void App::OnLaunched(LaunchActivatedEventArgs const&) {
-  set_log_stream("App");
-
-  spdlog::info("{}: {}", "App.OnLaunched", "creating resources");
-  device_resources = std::make_unique<DeviceResources>();
-
   spdlog::info("{}: {}", "App.OnLaunched", "creating windows/pages");
   window = make<implementation::MainWindow>();
   if (auto w = window.as<implementation::MainWindow>(); w) {
-    w->use(device_resources.get());
+    w->use(&dxgi, &devices);
   }
   window.Activate();
 }
