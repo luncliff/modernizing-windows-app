@@ -32,12 +32,16 @@ private:
   DeviceProvider* devices = nullptr;
   Microsoft::UI::Dispatching::DispatcherQueue foreground = nullptr;
 
+  Windows::Foundation::IAsyncAction action0 = nullptr;
+
 public:
   TestPage1();
   ~TestPage1();
 
   void SetSwapChainPanel(SwapChainPanel panel);
   void Clear();
+
+  Windows::Foundation::IAsyncAction StartUpdate();
 
   void use(DXGIProvider*, DeviceProvider*) noexcept(false);
   void update_render_target(ID3D11Device* device);
@@ -56,6 +60,7 @@ public:
                                     PointerRoutedEventArgs const&);
   void SwapchainPanel1_PointerExited(IInspectable const&,
                                      PointerRoutedEventArgs const&);
+  void updateToggle_Toggled(IInspectable const&, RoutedEventArgs const&);
 };
 } // namespace winrt::SwapchainPanelTest::implementation
 

@@ -51,7 +51,9 @@ void TestPage1::use(DXGIProvider* dxgi,
     throw winrt::hresult_invalid_argument{};
   this->dxgi = dxgi;
   this->devices = devices;
-  if (devices->supports_dx12() == false)
+
+  // todo: use supports_dx12
+  if (devices)
     return;
 
   // event handle for frame synchronization
@@ -85,12 +87,14 @@ void TestPage1::Clear() {
     return;
   // clear ...
   {
-    const float c = []() {
-      LARGE_INTEGER counter{};
-      QueryPerformanceCounter(&counter);
-      return (sinf(static_cast<float>(counter.LowPart)) / 2 + 0.5f);
+    const float c = []() -> float {
+      static float value = 0;
+      value += 0.01f;
+      if (value >= 1)
+        value = 0;
+      return (sinf(value) / 2 + 0.5f); // [0,1)
     }();
-    float color[4]{0, c, c, 1};
+    float color[4]{0, c, 0, 1};
     auto device_context = devices->get_dx11_device_context();
     device_context->ClearRenderTargetView(render_target.get(), color);
   }
@@ -220,6 +224,16 @@ void TestPage1::wait_for_gpu() noexcept(false) {
   d12_fence_values[frame_index] += 1;
 }
 
+IAsyncAction TestPage1::StartUpdate() {
+  using namespace std::chrono_literals;
+  auto token = co_await winrt::get_cancellation_token();
+  co_await winrt::resume_background();
+  while (token() == false) {
+    std::this_thread::sleep_for(10ms);
+    this->Clear();
+  }
+}
+
 void TestPage1::SwapchainPanel1_PointerEntered(
     IInspectable const&, PointerRoutedEventArgs const& e) {
   spdlog::debug("{}: mouse {}", "TestPage1", "entered");
@@ -253,6 +267,22 @@ IAsyncAction TestPage1::shaderTextBlock_Tapped(IInspectable const&,
   co_await ui_dispatcher_queue_awaiter_t{foreground};
   auto tb = shaderTextBlock();
   tb.Text(text);
+}
+
+void TestPage1::updateToggle_Toggled(IInspectable const& s,
+                                     RoutedEventArgs const& e) {
+  auto sender = s.as<Microsoft::UI::Xaml::Controls::ToggleSwitch>();
+  if (sender == nullptr)
+    return;
+  auto content = sender.IsOn() ? sender.OnContent() : sender.OffContent();
+  auto text = winrt::unbox_value<winrt::hstring>(content);
+  spdlog::debug("{}: {}", "TestPage1", winrt::to_string(text));
+
+  if (sender.IsOn()) {
+    action0 = StartUpdate();
+  } else if (action0 != nullptr) {
+    action0.Cancel();
+  }
 }
 
 } // namespace winrt::SwapchainPanelTest::implementation

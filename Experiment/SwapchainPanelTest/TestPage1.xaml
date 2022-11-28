@@ -17,11 +17,16 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="150"/>
             <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <!--<ToggleButton x:Name="updateToggle" Grid.Row="0" Grid.Column="0" Content="update?"></ToggleButton>-->
+        <ToggleSwitch x:Name="updateToggle" Grid.Row="0" Grid.Column="0" 
+                      OnContent="Running"
+                      OffContent="Paused"
+                      Toggled="updateToggle_Toggled"/>
         <TextBlock x:Name="shaderTextBlock" Grid.Row="1" Grid.Column="2" Tapped="shaderTextBlock_Tapped"/>
     </SwapChainPanel>
 </Page>
