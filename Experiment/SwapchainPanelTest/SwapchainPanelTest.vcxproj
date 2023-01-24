@@ -126,7 +126,6 @@
     <Manifest Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="D3D12Helper.h" />
     <ClInclude Include="DeviceProvider.h" />
     <ClInclude Include="DXGIProvider.h" />
     <ClInclude Include="pch.h" />

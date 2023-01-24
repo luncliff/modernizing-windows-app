@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="D3D12Helper.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="DeviceProvider.h" />
     <ClInclude Include="DXGIProvider.h" />
