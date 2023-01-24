@@ -14,11 +14,15 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
-    <ClCompile Include="GPUResources.cpp" />
+    <ClCompile Include="StepTimer.cpp" />
+    <ClCompile Include="DeviceProvider.cpp" />
+    <ClCompile Include="DXGIProvider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
-    <ClInclude Include="GPUResources.h" />
+    <ClInclude Include="StepTimer.h" />
+    <ClInclude Include="DeviceProvider.h" />
+    <ClInclude Include="DXGIProvider.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
@@ -50,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="readme.txt" />
+    <Text Include="Assets\shaders.hlsl">
+      <Filter>Assets</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="app.manifest" />

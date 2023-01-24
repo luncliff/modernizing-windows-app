@@ -5,8 +5,47 @@
     xmlns:local="using:SwapchainPanelTest"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    MinWidth="600" MinHeight="600">
-    <SwapChainPanel x:Name="SwapchainPanel1" SizeChanged="on_panel_size_changed" Tapped="on_panel_tapped">
-    </SwapChainPanel>
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Vertical">
+        <!--Title-->
+        <TextBlock Text="TestPage1" FontSize="25" Margin="10" />
+        <StackPanel Orientation="Horizontal" Margin="10,0,10,0">
+            <ToggleSwitch OnContent="1 - ON" OffContent="1 - OFF"/>
+            <ToggleSwitch OnContent="2 - ON" OffContent="2 - OFF"/>
+            <ToggleSwitch OnContent="3 - ON" OffContent="3 - OFF"/>
+        </StackPanel>
+        <!--Preview-->
+        <SwapChainPanel x:Name="SwapchainPanel1"
+                        HorizontalAlignment="Left" Margin="10"
+                        MaxWidth="640" MaxHeight="360"
+                        MinWidth="640" MinHeight="360"
+                        SizeChanged="on_panel_size_changed" Tapped="on_panel_tapped"
+                        PointerEntered="SwapchainPanel1_PointerEntered" 
+                        PointerMoved="SwapchainPanel1_PointerMoved"
+                        PointerExited="SwapchainPanel1_PointerExited">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="100"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ToggleSwitch x:Name="updateToggle" Grid.Row="0" Grid.Column="0" 
+                          OnContent="Running" OffContent="Paused" Toggled="updateToggle_Toggled"/>
+        </SwapChainPanel>
+        <ProgressBar x:Name="progressBar" Value="70" Maximum="200" Margin="10"/>
+
+        <!--Bottom Space-->
+        <TextBlock Text="Heading" FontSize="20" Margin="10" />
+        <ScrollViewer Height="200">
+            <TextBlock x:Name="shaderTextBlock" Margin="10" 
+                       ScrollViewer.VerticalScrollMode="Enabled"
+                       ScrollViewer.VerticalScrollBarVisibility="Visible"
+                       Tapped="shaderTextBlock_Tapped" Text="(Description)"/>
+        </ScrollViewer>
+    </StackPanel>
+
+
 </Page>

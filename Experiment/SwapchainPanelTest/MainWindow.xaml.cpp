@@ -29,14 +29,15 @@ Page MainWindow::GetPage1() {
   return page1;
 }
 
-void MainWindow::use(DeviceResources* ptr) noexcept {
-  if (ptr == nullptr)
+void MainWindow::use(DXGIProvider* dxgi, DeviceProvider* devices) noexcept {
+  if (dxgi == nullptr || devices == nullptr)
     throw winrt::hresult_invalid_argument{};
 
   spdlog::info("{}: {}", "MainWindow", "updating GPUResources");
-  device_resources = ptr;
+  this->dxgi = dxgi;
+  this->devices = devices;
   if (auto p = page1.as<implementation::TestPage1>(); p) {
-    p->use(device_resources);
+    p->use(dxgi, devices);
   }
 }
 
