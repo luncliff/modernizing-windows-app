@@ -27,8 +27,6 @@ public:
   winrt::com_ptr<ID3D12CommandQueue> get_dx12_command_queue() noexcept;
   winrt::com_ptr<ID3D11Device> get_dx11_device() noexcept;
   winrt::com_ptr<ID3D11DeviceContext> get_dx11_device_context() noexcept;
-
-  void reset_render_targets() noexcept;
 };
 
 } // namespace winrt::SwapchainPanelTest

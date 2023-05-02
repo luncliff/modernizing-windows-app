@@ -47,13 +47,12 @@ TestPage1::~TestPage1() {
     CloseHandle(d12_fence_event);
 }
 
-void TestPage1::use(DXGIProvider* dxgi,
-                    DeviceProvider* devices) noexcept(false) {
-  if (dxgi == nullptr || devices == nullptr)
+void TestPage1::use(DXGIProvider* _dxgi,
+                    DeviceProvider* _devices) noexcept(false) {
+  if (_dxgi == nullptr || _devices == nullptr)
     throw winrt::hresult_invalid_argument{};
-  this->dxgi = dxgi;
-  this->devices = devices;
-
+  dxgi = _dxgi;
+  devices = _devices;
   // todo: use supports_dx12
   if (devices)
     return;
@@ -87,30 +86,28 @@ void TestPage1::Clear() {
     return;
   if (render_target == nullptr)
     return;
-  // clear ...
-  {
-    const float c = []() -> float {
-      static float value = 0;
-      value += 0.01f;
-      if (value >= 1)
-        value = 0;
-      return (sinf(value) / 2 + 0.5f); // [0,1)
-    }();
-    float color[4]{0, c, 0, 1};
-    auto device_context = devices->get_dx11_device_context();
-    device_context->ClearRenderTargetView(render_target.get(), color);
-  }
-  // present...
-  {
-    if (auto hr = swapchain->Present(1, 0); FAILED(hr))
-      spdlog::warn("{}: {:X}", "swapchain present", static_cast<uint32_t>(hr));
-  }
+  const float c = []() -> float {
+    static float value = 0;
+    value += 0.01f;
+    if (value >= 1)
+      value = 0;
+    return value;
+  }();
+  float color[4]{0, c, 0, 1};
+  auto device_context = devices->get_dx11_device_context();
+  device_context->ClearRenderTargetView(render_target.get(), color);
 }
 
 void TestPage1::on_panel_size_changed(IInspectable const&,
                                       SizeChangedEventArgs const& e) {
   // remove references to the swapchain
-  devices->reset_render_targets();
+  {
+    auto device_context = devices->get_dx11_device_context();
+    std::array<ID3D11RenderTargetView*, 1> targets0{};
+    // no depth, stencil
+    device_context->OMSetRenderTargets(static_cast<UINT>(targets0.size()),
+                                       targets0.data(), nullptr);
+  }
   render_target = nullptr;
   render_target_texture = nullptr;
 
@@ -137,14 +134,14 @@ void TestPage1::on_panel_size_changed(IInspectable const&,
 
     if (auto hr = dxgi->create_swapchain(desc, device.get(), swapchain.put());
         FAILED(hr)) {
-      spdlog::warn("{}: {} {:X}", "TestPage1", "swapchain create",
-                   static_cast<uint32_t>(hr));
-      winrt::throw_hresult(hr);
+      winrt::hresult_error ex{hr};
+      spdlog::warn("{}: {} {}", "TestPage1", "swapchain create", ex);
+      throw ex;
     }
     if (auto hr = bridge->SetSwapChain(swapchain.get()); FAILED(hr)) {
-      spdlog::warn("{}: {} {:X}", "TestPage1", "swapchain change",
-                   static_cast<uint32_t>(hr));
-      winrt::throw_hresult(hr);
+      winrt::hresult_error ex{hr};
+      spdlog::warn("{}: {} {}", "TestPage1", "swapchain change", ex);
+      throw ex;
     }
   }
   // if exists, change size
@@ -153,11 +150,15 @@ void TestPage1::on_panel_size_changed(IInspectable const&,
                                            desc.Format, 0);
         FAILED(hr)) {
       winrt::hresult_error ex{hr};
-      spdlog::warn("{}: {}", "TestPage1", winrt::to_string(ex.message()));
+      spdlog::warn("{}: {} {}", "TestPage1", "swapchain resize", ex);
       throw ex;
     }
-    spdlog::info("{}: {} {:.2f} {:.2f}", "TestPage1", "resized", //
-                 size.Width, size.Height);
+    // print some messages for debugging
+    auto msg = winrt::hstring{fmt::format(L"{:.1f} {:.1f} {:.3f}", //
+                                          size.Width, size.Height,
+                                          size.Width / size.Height)};
+    update_description(msg);
+    spdlog::info("{}: {} {}", "TestPage1", "resized", msg);
   }
   // UpdateWindowSizeDependentResources...
   return this->update_render_target(device.get());
@@ -178,7 +179,6 @@ void TestPage1::update_render_target(ID3D11Device* device) {
 
 void TestPage1::on_panel_tapped(IInspectable const&,
                                 TappedRoutedEventArgs const&) {
-  this->Clear();
   D3D11_TEXTURE2D_DESC desc{};
   render_target_texture->GetDesc(&desc);
   spdlog::debug("{}: {:X}", "TestPage1", desc.CPUAccessFlags);
@@ -237,30 +237,43 @@ IAsyncAction TestPage1::StartUpdate() {
   StepTimer step{};
   step.SetFixedTimeStep(true);
   step.SetTargetElapsedSeconds(1); // call update per 1 second
-
-  while (token() == false) {
-    std::this_thread::sleep_for(10ms);
-    this->Clear();
-    step.Tick([](void*) { spdlog::debug("{}: {}", "TestPage1", "tick"); });
+  try {
+    while (token() == false) {
+      std::this_thread::sleep_for(10ms);
+      this->Clear();
+      if (auto hr = swapchain->Present(1, 0); FAILED(hr))
+        spdlog::warn("{}: {}", "swapchain present", winrt::hresult_error{hr});
+      step.Tick([](void*) { spdlog::debug("{}: {}", "TestPage1", "tick"); });
+    }
+    spdlog::debug("{}: {}", "TestPage1", "canceled");
+  } catch (const winrt::hresult_error& ex) {
+    const auto msg = ex.message();
+    spdlog::error("{}: {}", "TestPage1", msg);
+    update_description(msg);
   }
 }
 
-void TestPage1::SwapchainPanel1_PointerEntered(
-    IInspectable const&, PointerRoutedEventArgs const& e) {
+void TestPage1::SwapchainPanel1_PointerEntered(IInspectable const&,
+                                               PointerRoutedEventArgs const&) {
   spdlog::debug("{}: mouse {}", "TestPage1", "entered");
 }
 
 void TestPage1::SwapchainPanel1_PointerMoved(IInspectable const&,
                                              PointerRoutedEventArgs const& e) {
+  // acquire relative position to `nullptr`
+  Microsoft::UI::Input::PointerPoint point = e.GetCurrentPoint(nullptr);
+  const auto pos = point.Position();
+  spdlog::trace("{}: mouse {} {:.2f} {:.2f}", "TestPage1", "moved", //
+                pos.X, pos.Y);
 }
 
 void TestPage1::SwapchainPanel1_PointerExited(IInspectable const&,
-                                              PointerRoutedEventArgs const& e) {
+                                              PointerRoutedEventArgs const&) {
   spdlog::debug("{}: mouse {}", "TestPage1", "exited");
 }
 
-IAsyncAction TestPage1::shaderTextBlock_Tapped(IInspectable const&,
-                                               TappedRoutedEventArgs const&) {
+IAsyncAction TestPage1::validate_assets(IInspectable const&,
+                                        TappedRoutedEventArgs const&) {
   Windows::Storage::StorageFile file =
       co_await Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(
           Windows::Foundation::Uri{L"ms-appx:///Assets/shaders.hlsl"});
@@ -272,27 +285,44 @@ IAsyncAction TestPage1::shaderTextBlock_Tapped(IInspectable const&,
   Windows::Storage::Streams::Buffer buf(capacity);
 
   co_await stream.ReadAsync(buf, capacity, InputStreamOptions::None);
-  std::wstring text =
-      mb2w({reinterpret_cast<const char*>(buf.data()), buf.Length()});
 
-  co_await ui_dispatcher_queue_awaiter_t{foreground};
-  auto tb = shaderTextBlock();
-  tb.Text(text);
+  // std::wstring text =
+  //     mb2w({reinterpret_cast<const char*>(buf.data()), buf.Length()});
+
+  // co_await ui_dispatcher_queue_awaiter_t{foreground};
+  // auto tb = shaderTextBlock();
+  // tb.Text(text);
 }
 
-void TestPage1::updateToggle_Toggled(IInspectable const& s,
-                                     RoutedEventArgs const& e) {
+fire_and_forget TestPage1::update_description(winrt::hstring message) {
+  co_await ui_dispatcher_queue_awaiter_t{foreground};
+  auto text = descriptionText();
+  text.Text(message);
+}
+
+fire_and_forget TestPage1::update_progress(float ratio) {
+  co_await ui_dispatcher_queue_awaiter_t{foreground};
+  auto bar = progressBar();
+  ratio = std::clamp(ratio, 0.0f, 1.0f);
+  bar.Value(ratio * bar.Maximum());
+}
+
+void TestPage1::updateSwitch_Toggled(IInspectable const& s,
+                                     RoutedEventArgs const&) {
   auto sender = s.as<Microsoft::UI::Xaml::Controls::ToggleSwitch>();
   if (sender == nullptr)
     return;
   auto content = sender.IsOn() ? sender.OnContent() : sender.OffContent();
   auto text = winrt::unbox_value<winrt::hstring>(content);
-  spdlog::debug("{}: {}", "TestPage1", winrt::to_string(text));
+  spdlog::debug("{}: {}", "TestPage1", text);
 
   if (sender.IsOn()) {
     action0 = StartUpdate();
-  } else if (action0 != nullptr) {
+    return;
+  }
+  if (action0 != nullptr) {
     action0.Cancel();
+    action0 = nullptr;
   }
 }
 

@@ -52,15 +52,19 @@ public:
   void on_panel_size_changed(IInspectable const&, SizeChangedEventArgs const&);
   void on_panel_tapped(IInspectable const&, TappedRoutedEventArgs const&);
 
-  IAsyncAction shaderTextBlock_Tapped(IInspectable const&,
-                                      TappedRoutedEventArgs const&);
+  fire_and_forget update_description(winrt::hstring message);
+  fire_and_forget update_progress(float ratio = 0.0f);
+
+  IAsyncAction validate_assets(IInspectable const&,
+                               TappedRoutedEventArgs const&);
+  void updateSwitch_Toggled(IInspectable const&, RoutedEventArgs const&);
+
   void SwapchainPanel1_PointerEntered(IInspectable const&,
                                       PointerRoutedEventArgs const&);
   void SwapchainPanel1_PointerMoved(IInspectable const&,
                                     PointerRoutedEventArgs const&);
   void SwapchainPanel1_PointerExited(IInspectable const&,
                                      PointerRoutedEventArgs const&);
-  void updateToggle_Toggled(IInspectable const&, RoutedEventArgs const&);
 };
 } // namespace winrt::SwapchainPanelTest::implementation
 

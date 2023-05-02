@@ -110,11 +110,4 @@ DeviceProvider::get_dx11_device_context() noexcept {
   return d11_device_context;
 }
 
-void DeviceProvider::reset_render_targets() noexcept {
-  std::array<ID3D11RenderTargetView*, 1> targets0{};
-  // no depth, stencil
-  d11_device_context->OMSetRenderTargets(targets0.size(), targets0.data(),
-                                         nullptr);
-}
-
 } // namespace winrt::SwapchainPanelTest
