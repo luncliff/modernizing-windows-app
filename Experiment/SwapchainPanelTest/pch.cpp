@@ -1,12 +1,13 @@
+#define FMT_HEADER_ONLY
+#define SPDLOG_HEADER_ONLY
 #include "pch.h"
 
+#include <D3Dcompiler.h>
 #include <cstdio>
-#include <fmt/chrono.h>
 #include <spdlog/pattern_formatter.h>
 #include <spdlog/sinks/base_sink.h>
 #include <spdlog/sinks/msvc_sink.h>
 #include <spdlog/sinks/stdout_sinks.h>
-#include <D3Dcompiler.h>
 
 namespace winrt::SwapchainPanelTest {
 
@@ -36,7 +37,6 @@ void set_log_stream(const char* name) {
 #endif
   spdlog::set_default_logger(logger);
 }
-
 
 std::wstring mb2w(std::string_view in) noexcept(false) {
   std::wstring out{};

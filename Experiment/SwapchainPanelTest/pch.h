@@ -5,6 +5,7 @@
 #undef GetCurrentTime
 #include <winrt/Microsoft.UI.Composition.h>
 #include <winrt/Microsoft.UI.Dispatching.h>
+#include <winrt/Microsoft.UI.Input.h>
 #include <winrt/Microsoft.UI.Interop.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.Primitives.h>
 #include <winrt/Microsoft.UI.Xaml.Controls.h>
@@ -32,16 +33,16 @@
 #include <restrictederrorinfo.h>
 #include <unknwn.h>
 
-#define FMT_HEADER_ONLY
-#define SPDLOG_HEADER_ONLY
+#define SPDLOG_WCHAR_TO_UTF8_SUPPORT
 #include <fmt/format.h>
 #include <fmt/xchar.h>
 #include <spdlog/spdlog.h>
 
+#include "winrt_fmt_helper.hpp"
+
 namespace winrt::SwapchainPanelTest {
 
 void set_log_stream(const char* name);
-std::wstring mb2w(std::string_view in) noexcept(false);
 
 void GetAssetsPath(WCHAR* path, UINT pathSize);
 

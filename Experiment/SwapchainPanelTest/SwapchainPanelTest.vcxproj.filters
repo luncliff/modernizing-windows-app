@@ -23,6 +23,7 @@
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="DeviceProvider.h" />
     <ClInclude Include="DXGIProvider.h" />
+    <ClInclude Include="winrt_fmt_helper.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
