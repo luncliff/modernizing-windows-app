@@ -5,7 +5,7 @@
 #include "TestPage2.g.cpp"
 #endif
 
-namespace winrt::SwapchainPanelTest::implementation {
+namespace winrt::Exp1::implementation {
 using namespace Microsoft::UI::Xaml;
 
 int32_t TestPage2::MyProperty() {
@@ -16,4 +16,4 @@ void TestPage2::MyProperty(int32_t /* value */) {
   throw hresult_not_implemented();
 }
 
-} // namespace winrt::SwapchainPanelTest::implementation
+} // namespace winrt::Exp1::implementation

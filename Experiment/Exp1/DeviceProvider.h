@@ -6,7 +6,7 @@
 
 #include "DXGIProvider.h"
 
-namespace winrt::SwapchainPanelTest {
+namespace winrt::Exp1 {
 
 using Windows::Foundation::IAsyncAction;
 
@@ -29,4 +29,4 @@ public:
   winrt::com_ptr<ID3D11DeviceContext> get_dx11_device_context() noexcept;
 };
 
-} // namespace winrt::SwapchainPanelTest
+} // namespace winrt::Exp1

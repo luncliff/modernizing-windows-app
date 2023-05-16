@@ -9,7 +9,7 @@
 
 #include <microsoft.ui.xaml.window.h>
 
-namespace winrt::SwapchainPanelTest::implementation {
+namespace winrt::Exp1::implementation {
 using Windows::UI::Xaml::Interop::TypeKind;
 using Windows::UI::Xaml::Interop::TypeName;
 
@@ -67,12 +67,12 @@ void MainWindow::on_item_invoked(NavigationView const&,
   // see XamlTypeInfo.g.cpp
   Frame frame = ShellFrame();
   if (item == L"TestPage1") {
-    TypeName name{L"SwapchainPanelTest.TestPage1", TypeKind::Custom};
+    TypeName name{L"Exp1.TestPage1", TypeKind::Custom};
     frame.Navigate(name);
     return;
   }
   if (item == L"TestPage2") {
-    TypeName name{L"SwapchainPanelTest.TestPage2", TypeKind::Custom};
+    TypeName name{L"Exp1.TestPage2", TypeKind::Custom};
     frame.Navigate(name);
     return;
   }
@@ -85,4 +85,4 @@ void MainWindow::on_back_requested(
   if (frame.CanGoBack())
     frame.GoBack();
 }
-} // namespace winrt::SwapchainPanelTest::implementation
+} // namespace winrt::Exp1::implementation

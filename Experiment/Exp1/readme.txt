@@ -1,5 +1,5 @@
 ========================================================================
-    SwapchainPanelTest Project Overview
+    Exp1 Project Overview
 ========================================================================
 
 This project demonstrates how to get started writing WinUI3 apps directly

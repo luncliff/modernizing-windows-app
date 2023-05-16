@@ -11,7 +11,7 @@
 
 #include "StepTimer.h"
 
-namespace winrt::SwapchainPanelTest::implementation {
+namespace winrt::Exp1::implementation {
 using namespace Microsoft::UI::Xaml;
 using Windows::Storage::Streams::InputStreamOptions;
 
@@ -332,4 +332,4 @@ void TestPage1::updateSwitch_Toggled(IInspectable const& s,
   }
 }
 
-} // namespace winrt::SwapchainPanelTest::implementation
+} // namespace winrt::Exp1::implementation

@@ -9,7 +9,7 @@
 #include <spdlog/sinks/msvc_sink.h>
 #include <spdlog/sinks/stdout_sinks.h>
 
-namespace winrt::SwapchainPanelTest {
+namespace winrt::Exp1 {
 
 auto make_logger(const char* name, FILE* fout) noexcept(false) {
   using namespace spdlog::sinks;
@@ -212,4 +212,4 @@ winrt::com_ptr<ID3DBlob> CompileShader(const std::wstring& filename,
   return byteCode;
 }
 
-} // namespace winrt::SwapchainPanelTest
+} // namespace winrt::Exp1

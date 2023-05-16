@@ -8,8 +8,8 @@
     <CppWinRTRootNamespaceAutoMerge>true</CppWinRTRootNamespaceAutoMerge>
     <MinimalCoreWin>true</MinimalCoreWin>
     <ProjectGuid>{08233462-8612-4632-8951-604a21da289b}</ProjectGuid>
-    <ProjectName>SwapchainPanelTest</ProjectName>
-    <RootNamespace>SwapchainPanelTest</RootNamespace>
+    <ProjectName>Exp1</ProjectName>
+    <RootNamespace>Exp1</RootNamespace>
     <!--
       $(TargetName) should be same as $(RootNamespace) so that the produced binaries (.exe/.pri/etc.)
       have a name that matches the .winmd

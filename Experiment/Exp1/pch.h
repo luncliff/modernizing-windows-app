@@ -40,7 +40,7 @@
 
 #include "winrt_fmt_helper.hpp"
 
-namespace winrt::SwapchainPanelTest {
+namespace winrt::Exp1 {
 
 void set_log_stream(const char* name);
 
@@ -58,4 +58,4 @@ winrt::com_ptr<ID3DBlob> CompileShader(const std::wstring& filename,
                                        const std::string& entrypoint,
                                        const std::string& target);
 
-} // namespace winrt::SwapchainPanelTest
+} // namespace winrt::Exp1

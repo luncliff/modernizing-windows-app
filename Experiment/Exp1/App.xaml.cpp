@@ -3,7 +3,7 @@
 #include "App.xaml.h"
 #include "MainWindow.xaml.h"
 
-namespace winrt::SwapchainPanelTest::implementation {
+namespace winrt::Exp1::implementation {
 using namespace std::placeholders;
 
 App::App() {
@@ -34,4 +34,4 @@ void App::OnLaunched(LaunchActivatedEventArgs const&) {
   window.Activate();
 }
 
-} // namespace winrt::SwapchainPanelTest::implementation
+} // namespace winrt::Exp1::implementation

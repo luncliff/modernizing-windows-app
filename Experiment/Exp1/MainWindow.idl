@@ -1,4 +1,4 @@
-namespace SwapchainPanelTest {
+namespace Exp1 {
 
 [default_interface] runtimeclass MainWindow : Microsoft.UI.Xaml.Window {
   MainWindow();
@@ -8,4 +8,4 @@ namespace SwapchainPanelTest {
   Microsoft.UI.Xaml.Controls.Frame ShellFrame;
 }
 
-} // namespace SwapchainPanelTest
+} // namespace Exp1

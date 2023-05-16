@@ -5,7 +5,7 @@
 
 #pragma comment(lib, "D3D12")
 
-namespace winrt::SwapchainPanelTest {
+namespace winrt::Exp1 {
 
 DeviceProvider::DeviceProvider(DXGIProvider& dxgi) noexcept(false) {
   UINT d11_flags =
@@ -110,4 +110,4 @@ DeviceProvider::get_dx11_device_context() noexcept {
   return d11_device_context;
 }
 
-} // namespace winrt::SwapchainPanelTest
+} // namespace winrt::Exp1

@@ -3,7 +3,7 @@
 
 #include "DeviceProvider.h"
 
-namespace winrt::SwapchainPanelTest::implementation {
+namespace winrt::Exp1::implementation {
 using Microsoft::UI::Xaml::LaunchActivatedEventArgs;
 using Microsoft::UI::Xaml::UnhandledExceptionEventArgs;
 using Microsoft::UI::Xaml::Window;
@@ -25,4 +25,4 @@ private:
   Window window = nullptr;
 };
 
-} // namespace winrt::SwapchainPanelTest::implementation
+} // namespace winrt::Exp1::implementation

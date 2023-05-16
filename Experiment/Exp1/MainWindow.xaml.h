@@ -3,7 +3,7 @@
 
 #include "DeviceProvider.h"
 
-namespace winrt::SwapchainPanelTest::implementation {
+namespace winrt::Exp1::implementation {
 using Microsoft::UI::Xaml::RoutedEventArgs;
 using Microsoft::UI::Xaml::Window;
 using Microsoft::UI::Xaml::WindowSizeChangedEventArgs;
@@ -44,8 +44,8 @@ private:
   Page page2 = nullptr;
 };
 
-} // namespace winrt::SwapchainPanelTest::implementation
+} // namespace winrt::Exp1::implementation
 
-namespace winrt::SwapchainPanelTest::factory_implementation {
+namespace winrt::Exp1::factory_implementation {
 struct MainWindow : MainWindowT<MainWindow, implementation::MainWindow> {};
-} // namespace winrt::SwapchainPanelTest::factory_implementation
+} // namespace winrt::Exp1::factory_implementation

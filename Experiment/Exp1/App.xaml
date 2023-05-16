@@ -2,10 +2,10 @@
 <!-- Licensed under the MIT License. See LICENSE in the project root for license information. -->
 
 <Application
-    x:Class="SwapchainPanelTest.App"
+    x:Class="Exp1.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SwapchainPanelTest">
+    xmlns:local="using:Exp1">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

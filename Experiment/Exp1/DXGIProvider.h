@@ -7,7 +7,7 @@
 
 #include <microsoft.ui.xaml.media.dxinterop.h> // NOT <windows.ui.xaml.media.dxinterop.h>
 
-namespace winrt::SwapchainPanelTest {
+namespace winrt::Exp1 {
 
 using Windows::Foundation::IAsyncAction;
 
@@ -42,4 +42,4 @@ private:
                          DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE) noexcept(false);
 };
 
-} // namespace winrt::SwapchainPanelTest
+} // namespace winrt::Exp1

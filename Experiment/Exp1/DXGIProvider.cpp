@@ -2,7 +2,7 @@
 
 #include "DeviceProvider.h"
 
-namespace winrt::SwapchainPanelTest {
+namespace winrt::Exp1 {
 
 void DXGIProvider::GetHardwareAdapter(
     IDXGIFactory1* factory, IDXGIAdapter1** output,
@@ -92,4 +92,4 @@ DXGIProvider::DXGIProvider() noexcept(false) {
     winrt::throw_hresult(hr);
 }
 
-} // namespace winrt::SwapchainPanelTest
+} // namespace winrt::Exp1

@@ -1,9 +1,9 @@
 
-namespace SwapchainPanelTest {
+namespace Exp1 {
 
 [default_interface] runtimeclass TestPage2 : Microsoft.UI.Xaml.Controls.Page {
   TestPage2();
   Int32 MyProperty;
 }
 
-} // namespace SwapchainPanelTest
+} // namespace Exp1
