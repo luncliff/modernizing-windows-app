@@ -140,12 +140,19 @@
       <DependentUpon>TestPage1.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClInclude>
+    <ClInclude Include="TestPage2.xaml.h">
+      <DependentUpon>TestPage2.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClInclude>
     <ClInclude Include="winrt_fmt_helper.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
     <Page Include="MainWindow.xaml" />
     <Page Include="TestPage1.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TestPage2.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
@@ -167,6 +174,10 @@
       <DependentUpon>TestPage1.xaml</DependentUpon>
       <SubType>Code</SubType>
     </ClCompile>
+    <ClCompile Include="TestPage2.xaml.cpp">
+      <DependentUpon>TestPage2.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="App.idl">
@@ -179,6 +190,10 @@
     </Midl>
     <Midl Include="TestPage1.idl">
       <DependentUpon>TestPage1.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Midl>
+    <Midl Include="TestPage2.idl">
+      <DependentUpon>TestPage2.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
   </ItemGroup>

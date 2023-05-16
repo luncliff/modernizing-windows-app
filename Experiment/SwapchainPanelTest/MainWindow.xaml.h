@@ -11,6 +11,7 @@ using Microsoft::UI::Xaml::WindowVisibilityChangedEventArgs;
 using Microsoft::UI::Xaml::Controls::Frame;
 using Microsoft::UI::Xaml::Controls::NavigationView;
 using Microsoft::UI::Xaml::Controls::NavigationViewBackRequestedEventArgs;
+using Microsoft::UI::Xaml::Controls::NavigationViewItem;
 using Microsoft::UI::Xaml::Controls::NavigationViewItemInvokedEventArgs;
 using Microsoft::UI::Xaml::Controls::Page;
 using Windows::Foundation::IAsyncAction;
@@ -24,6 +25,7 @@ public:
   MainWindow();
 
   Page GetPage1();
+  Page GetPage2();
 
   void use(DXGIProvider*, DeviceProvider*) noexcept;
   void on_window_size_changed(IInspectable const& sender,
@@ -39,6 +41,7 @@ private:
   DXGIProvider* dxgi = nullptr;
   DeviceProvider* devices = nullptr;
   Page page1 = nullptr;
+  Page page2 = nullptr;
 };
 
 } // namespace winrt::SwapchainPanelTest::implementation

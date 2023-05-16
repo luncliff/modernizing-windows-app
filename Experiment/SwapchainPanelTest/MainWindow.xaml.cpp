@@ -5,6 +5,7 @@
 #include "MainWindow.g.cpp"
 #endif
 #include "TestPage1.xaml.h"
+#include "TestPage2.xaml.h"
 
 #include <microsoft.ui.xaml.window.h>
 
@@ -21,12 +22,19 @@ MainWindow::MainWindow() {
     winrt::throw_hresult(hr);
   spdlog::info("{}: HWND {:p}", "MainWindow", static_cast<void*>(hwnd));
   // create/update pages
-  page1 = winrt::make<implementation::TestPage1>();
-  ShellFrame().Content(page1);
+  //page1 = winrt::make<implementation::TestPage1>();
+  //page2 = winrt::make<implementation::TestPage2>();
+
+  //Frame frame = ShellFrame();
+  //frame.Content(page2);
 }
 
 Page MainWindow::GetPage1() {
   return page1;
+}
+
+Page MainWindow::GetPage2() {
+  return page2;
 }
 
 void MainWindow::use(DXGIProvider* dxgi, DeviceProvider* devices) noexcept {
@@ -53,10 +61,21 @@ void MainWindow::on_window_visibility_changed(
 }
 
 void MainWindow::on_item_invoked(NavigationView const&,
-                                 NavigationViewItemInvokedEventArgs const&) {
+                                 NavigationViewItemInvokedEventArgs const& e) {
   spdlog::info("{}: {}", "MainWindow", __func__);
+  auto item = e.InvokedItem().as<winrt::hstring>();
+  // see XamlTypeInfo.g.cpp
   Frame frame = ShellFrame();
-  // ...
+  if (item == L"TestPage1") {
+    TypeName name{L"SwapchainPanelTest.TestPage1", TypeKind::Custom};
+    frame.Navigate(name);
+    return;
+  }
+  if (item == L"TestPage2") {
+    TypeName name{L"SwapchainPanelTest.TestPage2", TypeKind::Custom};
+    frame.Navigate(name);
+    return;
+  }
 }
 
 void MainWindow::on_back_requested(

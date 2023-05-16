@@ -1,6 +1,11 @@
+/**
+ * @see https://fmt.dev/latest/api.html#format-api
+ * @note support "{}" expression
+ */
 #pragma once
-#include <fmt/format.h>
 #include <string_view>
+
+#include <fmt/xchar.h>
 #include <winrt/base.h>
 
 namespace fmt {
@@ -25,10 +30,6 @@ struct fmt::formatter<winrt::hstring> {
   }
 };
 
-/**
- * @see https://fmt.dev/latest/api.html#format-api
- * @note support "{}" expression
- */
 template <>
 struct fmt::formatter<winrt::hresult_error> {
   constexpr auto parse(format_parse_context& ctx) -> decltype(ctx.begin()) {

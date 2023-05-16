@@ -11,6 +11,7 @@
                     BackRequested="on_back_requested" IsSettingsVisible="True">
         <NavigationView.MenuItems>
             <NavigationViewItem Content="TestPage1" Icon="Pictures" Tag="TestPage1" />
+            <NavigationViewItem Content="TestPage2" Icon="Camera" Tag="TestPage2" />
         </NavigationView.MenuItems>
         <!-- ... -->
         <NavigationView.FooterMenuItems>

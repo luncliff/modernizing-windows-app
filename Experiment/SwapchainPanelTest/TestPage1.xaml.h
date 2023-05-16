@@ -2,6 +2,7 @@
 #include "TestPage1.g.h"
 
 #include "DeviceProvider.h"
+
 namespace winrt::SwapchainPanelTest::implementation {
 using Microsoft::UI::Xaml::RoutedEventArgs;
 using Microsoft::UI::Xaml::SizeChangedEventArgs;

@@ -42,7 +42,8 @@ TestPage1::TestPage1() {
   SetSwapChainPanel(panel);
 }
 TestPage1::~TestPage1() {
-  this->wait_for_gpu();
+  if (devices)
+    this->wait_for_gpu();
   if (d12_fence_event != INVALID_HANDLE_VALUE)
     CloseHandle(d12_fence_event);
 }
@@ -100,6 +101,9 @@ void TestPage1::Clear() {
 
 void TestPage1::on_panel_size_changed(IInspectable const&,
                                       SizeChangedEventArgs const& e) {
+  if (devices == nullptr)
+    return; // can't do the work...
+
   // remove references to the swapchain
   {
     auto device_context = devices->get_dx11_device_context();
@@ -315,6 +319,8 @@ void TestPage1::updateSwitch_Toggled(IInspectable const& s,
   auto content = sender.IsOn() ? sender.OnContent() : sender.OffContent();
   auto text = winrt::unbox_value<winrt::hstring>(content);
   spdlog::debug("{}: {}", "TestPage1", text);
+  if (swapchain == nullptr)
+    return; // can't do the work...
 
   if (sender.IsOn()) {
     action0 = StartUpdate();
