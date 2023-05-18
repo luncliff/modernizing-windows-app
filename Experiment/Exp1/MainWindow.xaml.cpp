@@ -4,8 +4,7 @@
 #if __has_include("MainWindow.g.cpp")
 #include "MainWindow.g.cpp"
 #endif
-#include "TestPage1.xaml.h"
-#include "TestPage2.xaml.h"
+//#include "TestPage1.xaml.h"
 
 #include <microsoft.ui.xaml.window.h>
 
@@ -69,6 +68,11 @@ void MainWindow::on_item_invoked(NavigationView const&, NavigationViewItemInvoke
   }
   if (item == L"TestPage2") {
     TypeName name{L"Exp1.TestPage2", TypeKind::Custom};
+    frame.Navigate(name, params);
+    return;
+  }
+  if (item == L"TestPage3") {
+    TypeName name{L"Exp1.TestPage3", TypeKind::Custom};
     frame.Navigate(name, params);
     return;
   }

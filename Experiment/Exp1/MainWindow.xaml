@@ -12,8 +12,9 @@
                     ItemInvoked="on_item_invoked" IsBackEnabled="{x:Bind ShellFrame.CanGoBack, Mode=OneWay}"
                     BackRequested="on_back_requested" IsSettingsVisible="True">
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="TestPage1" Tag="TestPage1" Icon="Caption" />
-            <NavigationViewItem Content="TestPage2" Tag="TestPage2" Icon="List" />
+            <NavigationViewItem Content="TestPage1" Tag="TestPage1" Icon="HangUp" />
+            <NavigationViewItem Content="TestPage2" Tag="TestPage2" Icon="Document" />
+            <NavigationViewItem Content="TestPage3" Tag="TestPage3" Icon="Camera" />
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
             <NavigationViewItem Content="Support" Icon="Help" Tag="Support" />
