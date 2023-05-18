@@ -6,14 +6,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <!-- see https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.symbol -->
+    <!-- see https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.appbarbutton -->
     <NavigationView x:Name="navigationView"
                     ItemInvoked="on_item_invoked" IsBackEnabled="{x:Bind ShellFrame.CanGoBack, Mode=OneWay}"
                     BackRequested="on_back_requested" IsSettingsVisible="True">
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="TestPage1" Icon="Pictures" Tag="TestPage1" />
-            <NavigationViewItem Content="TestPage2" Icon="Camera" Tag="TestPage2" />
+            <NavigationViewItem Content="TestPage1" Tag="TestPage1" Icon="Caption" />
+            <NavigationViewItem Content="TestPage2" Tag="TestPage2" Icon="List" />
         </NavigationView.MenuItems>
-        <!-- ... -->
         <NavigationView.FooterMenuItems>
             <NavigationViewItem Content="Support" Icon="Help" Tag="Support" />
         </NavigationView.FooterMenuItems>

@@ -24,24 +24,21 @@ private:
 public:
   MainWindow();
 
-  Page GetPage1();
-  Page GetPage2();
+  Page MakeSettingsPage();
 
   void use(DXGIProvider*, DeviceProvider*) noexcept;
-  void on_window_size_changed(IInspectable const& sender,
-                              WindowSizeChangedEventArgs const& e);
-  void on_window_visibility_changed(IInspectable const& sender,
-                                    WindowVisibilityChangedEventArgs const& e);
-  void on_item_invoked(NavigationView const&,
-                       NavigationViewItemInvokedEventArgs const&);
-  void on_back_requested(NavigationView const&,
-                         NavigationViewBackRequestedEventArgs const&);
+  DXGIProvider* get_dxgi_provider() const noexcept;
+  DeviceProvider* get_device_provider() const noexcept;
+
+  void on_window_size_changed(IInspectable const& sender, WindowSizeChangedEventArgs const& e);
+  void on_window_visibility_changed(IInspectable const& sender, WindowVisibilityChangedEventArgs const& e);
+  void on_item_invoked(NavigationView const&, NavigationViewItemInvokedEventArgs const&);
+  void on_back_requested(NavigationView const&, NavigationViewBackRequestedEventArgs const&);
 
 private:
   DXGIProvider* dxgi = nullptr;
   DeviceProvider* devices = nullptr;
   Page page1 = nullptr;
-  Page page2 = nullptr;
 };
 
 } // namespace winrt::Exp1::implementation

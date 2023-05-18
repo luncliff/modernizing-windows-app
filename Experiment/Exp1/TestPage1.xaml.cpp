@@ -4,6 +4,7 @@
 #if __has_include("TestPage1.g.cpp")
 #include "TestPage1.g.cpp"
 #endif
+#include "MainWindow.xaml.h"
 // #include <DirectXTK/Effects.h>
 
 #include <winrt/Windows.Storage.Streams.h>
@@ -18,9 +19,7 @@ using Windows::Storage::Streams::InputStreamOptions;
 struct ui_dispatcher_queue_awaiter_t {
   Microsoft::UI::Dispatching::DispatcherQueue queue;
 
-  ui_dispatcher_queue_awaiter_t(
-      Microsoft::UI::Dispatching::DispatcherQueue queue)
-      : queue{queue} {
+  ui_dispatcher_queue_awaiter_t(Microsoft::UI::Dispatching::DispatcherQueue queue) : queue{queue} {
     // ...
   }
 
@@ -36,42 +35,56 @@ struct ui_dispatcher_queue_awaiter_t {
 
 TestPage1::TestPage1() {
   InitializeComponent();
-  foreground =
-      Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread();
+  foreground = Microsoft::UI::Dispatching::DispatcherQueue::GetForCurrentThread();
   SwapChainPanel panel = SwapchainPanel1();
   SetSwapChainPanel(panel);
 }
+
 TestPage1::~TestPage1() {
   if (devices)
-    this->wait_for_gpu();
+    wait_for_gpu();
   if (d12_fence_event != INVALID_HANDLE_VALUE)
     CloseHandle(d12_fence_event);
 }
 
-void TestPage1::use(DXGIProvider* _dxgi,
-                    DeviceProvider* _devices) noexcept(false) {
-  if (_dxgi == nullptr || _devices == nullptr)
-    throw winrt::hresult_invalid_argument{};
-  dxgi = _dxgi;
-  devices = _devices;
-  // todo: use supports_dx12
-  if (devices)
+void TestPage1::OnNavigatedTo(const Microsoft::UI::Xaml::Navigation::NavigationEventArgs& e) {
+  spdlog::info("{}: {}", "TestPage1", __func__);
+  auto address = winrt::unbox_value<uintptr_t>(e.Parameter());
+  spdlog::debug("{}: {:p}", "TestPage1", reinterpret_cast<void*>(address));
+
+  auto window = reinterpret_cast<implementation::MainWindow*>(address);
+  if (window == nullptr)
     return;
 
+  dxgi = window->get_dxgi_provider();
+  devices = window->get_device_provider();
+}
+
+void TestPage1::OnNavigatedFrom(const Microsoft::UI::Xaml::Navigation::NavigationEventArgs&) {
+  spdlog::info("{}: {}", "TestPage1", __func__);
+}
+
+/// @see after OnNavigatedTo, prepare some resources
+void TestPage1::Page_Loaded(IInspectable const&, RoutedEventArgs const&) {
+  spdlog::info("{}: {}", "TestPage1", __func__);
+  if (dxgi == nullptr || devices == nullptr)
+    throw winrt::hresult_invalid_argument{};
+  setup_graphics();
+}
+
+void TestPage1::setup_graphics() noexcept(false) {
   // event handle for frame synchronization
   d12_fence_event = CreateEventW(nullptr, false, false, nullptr);
   if (d12_fence_event == INVALID_HANDLE_VALUE)
     winrt::throw_last_error();
   // fence for command queue signal
   auto device = devices->get_dx12_device();
-  if (auto hr = device->CreateFence(
-          d12_fence_values[frame_index], D3D12_FENCE_FLAG_NONE,
-          __uuidof(ID3D12Fence), d12_fence.put_void());
+  if (auto hr = device->CreateFence(d12_fence_values[frame_index], D3D12_FENCE_FLAG_NONE, __uuidof(ID3D12Fence),
+                                    d12_fence.put_void());
       FAILED(hr))
     winrt::throw_hresult(hr);
   d12_fence_values[frame_index]++;
-
-  return this->wait_for_gpu();
+  wait_for_gpu();
 }
 
 void TestPage1::SetSwapChainPanel(SwapChainPanel panel) {
@@ -88,19 +101,16 @@ void TestPage1::Clear() {
   if (render_target == nullptr)
     return;
   const float c = []() -> float {
-    static float value = 0;
+    static float value = -1000.0f;
     value += 0.01f;
-    if (value >= 1)
-      value = 0;
-    return value;
+    return sinf(value) * 0.4f + 0.5f;
   }();
-  float color[4]{0, c, 0, 1};
+  float color[4]{0, 0, c, 1};
   auto device_context = devices->get_dx11_device_context();
   device_context->ClearRenderTargetView(render_target.get(), color);
 }
 
-void TestPage1::on_panel_size_changed(IInspectable const&,
-                                      SizeChangedEventArgs const& e) {
+void TestPage1::on_panel_size_changed(IInspectable const&, SizeChangedEventArgs const& e) {
   if (devices == nullptr)
     return; // can't do the work...
 
@@ -109,8 +119,7 @@ void TestPage1::on_panel_size_changed(IInspectable const&,
     auto device_context = devices->get_dx11_device_context();
     std::array<ID3D11RenderTargetView*, 1> targets0{};
     // no depth, stencil
-    device_context->OMSetRenderTargets(static_cast<UINT>(targets0.size()),
-                                       targets0.data(), nullptr);
+    device_context->OMSetRenderTargets(static_cast<UINT>(targets0.size()), targets0.data(), nullptr);
   }
   render_target = nullptr;
   render_target_texture = nullptr;
@@ -136,8 +145,7 @@ void TestPage1::on_panel_size_changed(IInspectable const&,
     desc.Scaling = DXGI_SCALING_STRETCH;
     desc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 
-    if (auto hr = dxgi->create_swapchain(desc, device.get(), swapchain.put());
-        FAILED(hr)) {
+    if (auto hr = dxgi->create_swapchain(desc, device.get(), swapchain.put()); FAILED(hr)) {
       winrt::hresult_error ex{hr};
       spdlog::warn("{}: {} {}", "TestPage1", "swapchain create", ex);
       throw ex;
@@ -150,17 +158,14 @@ void TestPage1::on_panel_size_changed(IInspectable const&,
   }
   // if exists, change size
   else {
-    if (auto hr = swapchain->ResizeBuffers(2, desc.Width, desc.Height,
-                                           desc.Format, 0);
-        FAILED(hr)) {
+    if (auto hr = swapchain->ResizeBuffers(2, desc.Width, desc.Height, desc.Format, 0); FAILED(hr)) {
       winrt::hresult_error ex{hr};
       spdlog::warn("{}: {} {}", "TestPage1", "swapchain resize", ex);
       throw ex;
     }
     // print some messages for debugging
     auto msg = winrt::hstring{fmt::format(L"{:.1f} {:.1f} {:.3f}", //
-                                          size.Width, size.Height,
-                                          size.Width / size.Height)};
+                                          size.Width, size.Height, size.Width / size.Height)};
     update_description(msg);
     spdlog::info("{}: {} {}", "TestPage1", "resized", msg);
   }
@@ -170,19 +175,14 @@ void TestPage1::on_panel_size_changed(IInspectable const&,
 
 void TestPage1::update_render_target(ID3D11Device* device) {
   render_target_texture = nullptr;
-  if (auto hr = swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D),
-                                     render_target_texture.put_void());
-      FAILED(hr))
+  if (auto hr = swapchain->GetBuffer(0, __uuidof(ID3D11Texture2D), render_target_texture.put_void()); FAILED(hr))
     winrt::throw_hresult(hr);
   render_target = nullptr;
-  if (auto hr = device->CreateRenderTargetView(render_target_texture.get(), 0,
-                                               render_target.put());
-      FAILED(hr))
+  if (auto hr = device->CreateRenderTargetView(render_target_texture.get(), 0, render_target.put()); FAILED(hr))
     winrt::throw_hresult(hr);
 }
 
-void TestPage1::on_panel_tapped(IInspectable const&,
-                                TappedRoutedEventArgs const&) {
+void TestPage1::on_panel_tapped(IInspectable const&, TappedRoutedEventArgs const&) {
   D3D11_TEXTURE2D_DESC desc{};
   render_target_texture->GetDesc(&desc);
   spdlog::debug("{}: {:X}", "TestPage1", desc.CPUAccessFlags);
@@ -199,9 +199,7 @@ void TestPage1::update_frame_index() noexcept(false) {
 
   // If the next frame is not ready to be rendered yet, wait until it is ready.
   if (d12_fence->GetCompletedValue() < d12_fence_values[frame_index]) {
-    if (auto hr = d12_fence->SetEventOnCompletion(d12_fence_values[frame_index],
-                                                  d12_fence_event);
-        FAILED(hr))
+    if (auto hr = d12_fence->SetEventOnCompletion(d12_fence_values[frame_index], d12_fence_event); FAILED(hr))
       winrt::throw_hresult(hr);
 
     WaitForSingleObjectEx(d12_fence_event, INFINITE, FALSE);
@@ -220,9 +218,7 @@ void TestPage1::wait_for_gpu() noexcept(false) {
 
   // If the next frame is not ready to be rendered yet, wait until it is ready.
   if (d12_fence->GetCompletedValue() < d12_fence_values[frame_index]) {
-    if (auto hr = d12_fence->SetEventOnCompletion(d12_fence_values[frame_index],
-                                                  d12_fence_event);
-        FAILED(hr))
+    if (auto hr = d12_fence->SetEventOnCompletion(d12_fence_values[frame_index], d12_fence_event); FAILED(hr))
       winrt::throw_hresult(hr);
 
     WaitForSingleObjectEx(d12_fence_event, INFINITE, FALSE);
@@ -257,13 +253,11 @@ IAsyncAction TestPage1::StartUpdate() {
   }
 }
 
-void TestPage1::SwapchainPanel1_PointerEntered(IInspectable const&,
-                                               PointerRoutedEventArgs const&) {
+void TestPage1::SwapchainPanel1_PointerEntered(IInspectable const&, PointerRoutedEventArgs const&) {
   spdlog::debug("{}: mouse {}", "TestPage1", "entered");
 }
 
-void TestPage1::SwapchainPanel1_PointerMoved(IInspectable const&,
-                                             PointerRoutedEventArgs const& e) {
+void TestPage1::SwapchainPanel1_PointerMoved(IInspectable const&, PointerRoutedEventArgs const& e) {
   // acquire relative position to `nullptr`
   Microsoft::UI::Input::PointerPoint point = e.GetCurrentPoint(nullptr);
   const auto pos = point.Position();
@@ -271,16 +265,13 @@ void TestPage1::SwapchainPanel1_PointerMoved(IInspectable const&,
                 pos.X, pos.Y);
 }
 
-void TestPage1::SwapchainPanel1_PointerExited(IInspectable const&,
-                                              PointerRoutedEventArgs const&) {
+void TestPage1::SwapchainPanel1_PointerExited(IInspectable const&, PointerRoutedEventArgs const&) {
   spdlog::debug("{}: mouse {}", "TestPage1", "exited");
 }
 
-IAsyncAction TestPage1::validate_assets(IInspectable const&,
-                                        TappedRoutedEventArgs const&) {
-  Windows::Storage::StorageFile file =
-      co_await Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(
-          Windows::Foundation::Uri{L"ms-appx:///Assets/shaders.hlsl"});
+IAsyncAction TestPage1::validate_assets(IInspectable const&, TappedRoutedEventArgs const&) {
+  Windows::Storage::StorageFile file = co_await Windows::Storage::StorageFile::GetFileFromApplicationUriAsync(
+      Windows::Foundation::Uri{L"ms-appx:///Assets/shaders.hlsl"});
   if (file == nullptr)
     co_return;
 
@@ -311,8 +302,7 @@ fire_and_forget TestPage1::update_progress(float ratio) {
   bar.Value(ratio * bar.Maximum());
 }
 
-void TestPage1::updateSwitch_Toggled(IInspectable const& s,
-                                     RoutedEventArgs const&) {
+void TestPage1::updateSwitch_Toggled(IInspectable const& s, RoutedEventArgs const&) {
   auto sender = s.as<Microsoft::UI::Xaml::Controls::ToggleSwitch>();
   if (sender == nullptr)
     return;

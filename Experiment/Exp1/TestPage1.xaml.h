@@ -2,6 +2,7 @@
 #include "TestPage1.g.h"
 
 #include "DeviceProvider.h"
+#include <winrt/Microsoft.UI.Xaml.Controls.h>
 
 namespace winrt::Exp1::implementation {
 using Microsoft::UI::Xaml::RoutedEventArgs;
@@ -42,9 +43,16 @@ public:
   void SetSwapChainPanel(SwapChainPanel panel);
   void Clear();
 
+  /// @brief the page is loaded
+  /// @see https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.page.onnavigatedto
+  void OnNavigatedTo(const Microsoft::UI::Xaml::Navigation::NavigationEventArgs& e);
+  /// @brief the page will be unloaded
+  /// @see https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.page.onnavigatedfrom
+  void OnNavigatedFrom(const Microsoft::UI::Xaml::Navigation::NavigationEventArgs& e);
+
   Windows::Foundation::IAsyncAction StartUpdate();
 
-  void use(DXGIProvider*, DeviceProvider*) noexcept(false);
+  void setup_graphics() noexcept(false);
   void update_render_target(ID3D11Device* device);
 
   void wait_for_gpu() noexcept(false);
@@ -56,16 +64,13 @@ public:
   fire_and_forget update_description(winrt::hstring message);
   fire_and_forget update_progress(float ratio = 0.0f);
 
-  IAsyncAction validate_assets(IInspectable const&,
-                               TappedRoutedEventArgs const&);
-  void updateSwitch_Toggled(IInspectable const&, RoutedEventArgs const&);
+  IAsyncAction validate_assets(IInspectable const&, TappedRoutedEventArgs const&);
 
-  void SwapchainPanel1_PointerEntered(IInspectable const&,
-                                      PointerRoutedEventArgs const&);
-  void SwapchainPanel1_PointerMoved(IInspectable const&,
-                                    PointerRoutedEventArgs const&);
-  void SwapchainPanel1_PointerExited(IInspectable const&,
-                                     PointerRoutedEventArgs const&);
+  void Page_Loaded(IInspectable const& sender, RoutedEventArgs const& e);
+  void updateSwitch_Toggled(IInspectable const&, RoutedEventArgs const&);
+  void SwapchainPanel1_PointerEntered(IInspectable const&, PointerRoutedEventArgs const&);
+  void SwapchainPanel1_PointerMoved(IInspectable const&, PointerRoutedEventArgs const&);
+  void SwapchainPanel1_PointerExited(IInspectable const&, PointerRoutedEventArgs const&);
 };
 } // namespace winrt::Exp1::implementation
 

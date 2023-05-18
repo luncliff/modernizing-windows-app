@@ -3,7 +3,7 @@ namespace Exp1 {
 [default_interface] runtimeclass MainWindow : Microsoft.UI.Xaml.Window {
   MainWindow();
 
-  Microsoft.UI.Xaml.Controls.Page GetPage1();
+  Microsoft.UI.Xaml.Controls.Page MakeSettingsPage();
 
   Microsoft.UI.Xaml.Controls.Frame ShellFrame;
 }

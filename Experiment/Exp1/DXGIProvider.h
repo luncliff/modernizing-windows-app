@@ -20,13 +20,10 @@ public:
 
   winrt::com_ptr<IDXGIFactory4> get_factory() noexcept;
 
-  HRESULT create_device(ID3D12Device** output,
-                        bool hardware = true) noexcept(false);
-  HRESULT create_swapchain(const DXGI_SWAP_CHAIN_DESC1& desc,
-                           ID3D11Device* device,
+  HRESULT create_device(ID3D12Device** output, bool hardware = true) noexcept(false);
+  HRESULT create_swapchain(const DXGI_SWAP_CHAIN_DESC1& desc, ID3D11Device* device,
                            IDXGISwapChain1** outpur) noexcept(false);
-  HRESULT create_swapchain(const DXGI_SWAP_CHAIN_DESC1& desc,
-                           ID3D11Device* device,
+  HRESULT create_swapchain(const DXGI_SWAP_CHAIN_DESC1& desc, ID3D11Device* device,
                            IDXGISwapChain3** outpur) noexcept(false);
 
 private:
@@ -36,10 +33,8 @@ private:
    * @param output  If no adapter found, it will be set to `nullptr`
    * @param preference
    */
-  static void
-  GetHardwareAdapter(IDXGIFactory1* factory, IDXGIAdapter1** output,
-                     DXGI_GPU_PREFERENCE preference =
-                         DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE) noexcept(false);
+  static void GetHardwareAdapter(IDXGIFactory1* factory, IDXGIAdapter1** output,
+                                 DXGI_GPU_PREFERENCE preference = DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE) noexcept(false);
 };
 
 } // namespace winrt::Exp1

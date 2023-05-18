@@ -9,16 +9,13 @@ using namespace std::placeholders;
 App::App() {
   set_log_stream("App");
   InitializeComponent();
-  // ...
   UnhandledException(std::bind(&App::on_unhandled_exception, this, _1, _2));
 }
 
-void App::on_unhandled_exception(IInspectable const&,
-                                 UnhandledExceptionEventArgs const& e) {
+void App::on_unhandled_exception(IInspectable const&, UnhandledExceptionEventArgs const& e) {
   auto message = e.Message();
   spdlog::critical("{}: {}", "App", winrt::to_string(message));
-#if defined _DEBUG &&                                                          \
-    !defined DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION
+#if defined(_DEBUG) && !defined(DISABLE_XAML_GENERATED_BREAK_ON_UNHANDLED_EXCEPTION)
   if (IsDebuggerPresent()) {
     __debugbreak();
   }

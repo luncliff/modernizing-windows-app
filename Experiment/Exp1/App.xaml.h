@@ -15,8 +15,7 @@ struct App : AppT<App> {
   App();
 
   void OnLaunched(LaunchActivatedEventArgs const&);
-  void on_unhandled_exception(IInspectable const&,
-                              UnhandledExceptionEventArgs const& e);
+  void on_unhandled_exception(IInspectable const&, UnhandledExceptionEventArgs const& e);
 
 private:
   DXGIProvider dxgi{};

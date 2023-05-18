@@ -21,20 +21,11 @@ MainWindow::MainWindow() {
   if (auto hr = native->get_WindowHandle(&hwnd); FAILED(hr))
     winrt::throw_hresult(hr);
   spdlog::info("{}: HWND {:p}", "MainWindow", static_cast<void*>(hwnd));
-  // create/update pages
-  //page1 = winrt::make<implementation::TestPage1>();
-  //page2 = winrt::make<implementation::TestPage2>();
-
-  //Frame frame = ShellFrame();
-  //frame.Content(page2);
 }
 
-Page MainWindow::GetPage1() {
-  return page1;
-}
-
-Page MainWindow::GetPage2() {
-  return page2;
+Page MainWindow::MakeSettingsPage() {
+  // page1 = winrt::make<implementation::TestPage1>();
+  return nullptr;
 }
 
 void MainWindow::use(DXGIProvider* dxgi, DeviceProvider* devices) noexcept {
@@ -44,42 +35,46 @@ void MainWindow::use(DXGIProvider* dxgi, DeviceProvider* devices) noexcept {
   spdlog::info("{}: {}", "MainWindow", "updating GPUResources");
   this->dxgi = dxgi;
   this->devices = devices;
-  if (auto p = page1.as<implementation::TestPage1>(); p) {
-    p->use(dxgi, devices);
-  }
 }
 
-void MainWindow::on_window_size_changed(IInspectable const&,
-                                        WindowSizeChangedEventArgs const& e) {
+DXGIProvider* MainWindow::get_dxgi_provider() const noexcept {
+  return dxgi;
+}
+DeviceProvider* MainWindow::get_device_provider() const noexcept {
+  return devices;
+}
+
+void MainWindow::on_window_size_changed(IInspectable const&, WindowSizeChangedEventArgs const& e) {
   auto s = e.Size();
   spdlog::info("{}: size ({:.2f},{:.2f})", "MainWindow", s.Width, s.Height);
 }
 
-void MainWindow::on_window_visibility_changed(
-    IInspectable const&, WindowVisibilityChangedEventArgs const& e) {
+void MainWindow::on_window_visibility_changed(IInspectable const&, WindowVisibilityChangedEventArgs const& e) {
   spdlog::info("{}: visibility {}", "MainWindow", e.Visible());
 }
 
-void MainWindow::on_item_invoked(NavigationView const&,
-                                 NavigationViewItemInvokedEventArgs const& e) {
+void MainWindow::on_item_invoked(NavigationView const&, NavigationViewItemInvokedEventArgs const& e) {
   spdlog::info("{}: {}", "MainWindow", __func__);
   auto item = e.InvokedItem().as<winrt::hstring>();
   // see XamlTypeInfo.g.cpp
+  // see https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.frame.navigate
   Frame frame = ShellFrame();
+  // there are very limited types for params... read the document above.
+  uintptr_t ptr = reinterpret_cast<uintptr_t>(this);
+  IInspectable params = winrt::box_value(ptr);
   if (item == L"TestPage1") {
     TypeName name{L"Exp1.TestPage1", TypeKind::Custom};
-    frame.Navigate(name);
+    frame.Navigate(name, params);
     return;
   }
   if (item == L"TestPage2") {
     TypeName name{L"Exp1.TestPage2", TypeKind::Custom};
-    frame.Navigate(name);
+    frame.Navigate(name, params);
     return;
   }
 }
 
-void MainWindow::on_back_requested(
-    NavigationView const&, NavigationViewBackRequestedEventArgs const&) {
+void MainWindow::on_back_requested(NavigationView const&, NavigationViewBackRequestedEventArgs const&) {
   spdlog::info("{}: {}", "MainWindow", __func__);
   Frame frame = ShellFrame();
   if (frame.CanGoBack())

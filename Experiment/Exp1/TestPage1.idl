@@ -1,3 +1,8 @@
+//// import "Windows.UI.Xaml.Controls.idl"
+//delegate void NavigationEndHandler(Microsoft.UI.Xaml.Navigation.NavigationEventArg);
+//
+//// https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.page.onnavigatedfrom
+//event NavigationEndHandler OnNavigatedFrom; // event.
 
 namespace Exp1 {
 

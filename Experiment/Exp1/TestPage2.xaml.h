@@ -17,12 +17,12 @@ struct TestPage2 : TestPage2T<TestPage2> {
 
   Exp1::RepositoryViewModel ViewModel0();
 
-  void on_button_clicked(IInspectable const&, RoutedEventArgs const&);
-  IAsyncAction on_selection_changed(IInspectable const&,
-                                    SelectionChangedEventArgs const&);
+  fire_and_forget on_button_clicked(IInspectable const&, RoutedEventArgs const&);
+  void on_selection_changed(IInspectable const&, SelectionChangedEventArgs const&);
 
 private:
   Exp1::RepositoryViewModel viewmodel0 = nullptr;
+  Exp1::RepositoryItem selected = nullptr;
 };
 } // namespace winrt::Exp1::implementation
 
