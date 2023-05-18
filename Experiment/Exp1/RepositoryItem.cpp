@@ -5,7 +5,7 @@
 #include "RepositoryItem.g.cpp"
 #endif
 
-namespace winrt::CollectionTest::implementation {
+namespace winrt::Exp1::implementation {
 
 RepositoryItem::RepositoryItem() : name{}, owner{}, on_property_changed{} {
   // ...
@@ -57,4 +57,4 @@ Uri RepositoryItem::ProjectUri() {
   return Uri{ProjectUriString()};
 }
 
-} // namespace winrt::CollectionTest::implementation
+} // namespace winrt::Exp1::implementation

@@ -1,9 +1,13 @@
+import "RepositoryViewModel.idl";
 
 namespace Exp1 {
 
 [default_interface] runtimeclass TestPage2 : Microsoft.UI.Xaml.Controls.Page {
   TestPage2();
-  Int32 MyProperty;
+
+  RepositoryViewModel ViewModel0 {
+    get;
+  };
 }
 
 } // namespace Exp1

@@ -6,21 +6,19 @@
 #endif
 #include "RepositoryItem.h"
 
-namespace winrt::CollectionTest::implementation {
+namespace winrt::Exp1::implementation {
 
 RepositoryViewModel::RepositoryViewModel() {
   spdlog::info("{}: {}", "RepositoryViewModel", __func__); // ..
-  items = winrt::single_threaded_observable_vector<
-      CollectionTest::RepositoryItem>();
+  items = winrt::single_threaded_observable_vector<Exp1::RepositoryItem>();
   items.Append(
       winrt::make<implementation::RepositoryItem>(L"microsoft", L"vcpkg"));
   items.Append(
       winrt::make<implementation::RepositoryItem>(L"conan-io", L"conan"));
 }
 
-IObservableVector<CollectionTest::RepositoryItem>
-RepositoryViewModel::Repositories() {
+IObservableVector<Exp1::RepositoryItem> RepositoryViewModel::Repositories() {
   return items;
 }
 
-} // namespace winrt::CollectionTest::implementation
+} // namespace winrt::Exp1::implementation

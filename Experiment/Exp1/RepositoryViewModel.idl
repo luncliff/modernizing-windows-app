@@ -1,6 +1,6 @@
 import "RepositoryItem.idl";
 
-namespace CollectionTest {
+namespace Exp1 {
 
 runtimeclass RepositoryViewModel {
   RepositoryViewModel();
@@ -10,4 +10,4 @@ runtimeclass RepositoryViewModel {
   };
 }
 
-} // namespace CollectionTest
+} // namespace Exp1

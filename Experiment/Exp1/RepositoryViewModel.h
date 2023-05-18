@@ -4,7 +4,7 @@
 #include <winrt/Microsoft.UI.Xaml.Data.h>
 #include <winrt/Windows.Foundation.Collections.h>
 
-namespace winrt::CollectionTest::implementation {
+namespace winrt::Exp1::implementation {
 using Microsoft::UI::Xaml::Data::PropertyChangedEventArgs;
 using Microsoft::UI::Xaml::Data::PropertyChangedEventHandler;
 using Windows::Foundation::Collections::IObservableVector;
@@ -12,17 +12,17 @@ using Windows::Foundation::Collections::IVector;
 
 struct RepositoryViewModel : RepositoryViewModelT<RepositoryViewModel> {
 private:
-  IObservableVector<CollectionTest::RepositoryItem> items;
+  IObservableVector<Exp1::RepositoryItem> items;
 
 public:
   RepositoryViewModel();
 
-  IObservableVector<CollectionTest::RepositoryItem> Repositories();
+  IObservableVector<Exp1::RepositoryItem> Repositories();
 };
-} // namespace winrt::CollectionTest::implementation
+} // namespace winrt::Exp1::implementation
 
-namespace winrt::CollectionTest::factory_implementation {
+namespace winrt::Exp1::factory_implementation {
 struct RepositoryViewModel
     : RepositoryViewModelT<RepositoryViewModel,
                            implementation::RepositoryViewModel> {};
-} // namespace winrt::CollectionTest::factory_implementation
+} // namespace winrt::Exp1::factory_implementation

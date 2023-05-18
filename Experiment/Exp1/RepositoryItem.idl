@@ -1,4 +1,4 @@
-namespace CollectionTest {
+namespace Exp1 {
 
 runtimeclass RepositoryItem : Microsoft.UI.Xaml.Data.INotifyPropertyChanged {
   RepositoryItem();
@@ -14,4 +14,4 @@ runtimeclass RepositoryItem : Microsoft.UI.Xaml.Data.INotifyPropertyChanged {
   };
 }
 
-} // namespace CollectionTest
+} // namespace Exp1

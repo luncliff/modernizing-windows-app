@@ -4,7 +4,7 @@
 #include <winrt/Microsoft.UI.Xaml.Data.h>
 #include <winrt/Windows.Foundation.Collections.h>
 
-namespace winrt::CollectionTest::implementation {
+namespace winrt::Exp1::implementation {
 using Microsoft::UI::Xaml::Data::PropertyChangedEventArgs;
 using Microsoft::UI::Xaml::Data::PropertyChangedEventHandler;
 using Windows::Foundation::Uri;
@@ -27,16 +27,16 @@ public:
   winrt::hstring Name();
   void Name(winrt::hstring const& value);
 
-    winrt::hstring ProjectUriString();
+  winrt::hstring ProjectUriString();
   Uri ProjectUri();
 
   winrt::event_token PropertyChanged(PropertyChangedEventHandler const& value);
   void PropertyChanged(winrt::event_token const& token);
 };
 
-} // namespace winrt::CollectionTest::implementation
+} // namespace winrt::Exp1::implementation
 
-namespace winrt::CollectionTest::factory_implementation {
+namespace winrt::Exp1::factory_implementation {
 struct RepositoryItem
     : RepositoryItemT<RepositoryItem, implementation::RepositoryItem> {};
-} // namespace winrt::CollectionTest::factory_implementation
+} // namespace winrt::Exp1::factory_implementation

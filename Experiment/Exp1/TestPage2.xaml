@@ -7,7 +7,41 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="Button">Click Me</Button>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+        <TextBlock Text="Repositories" Margin="10"/>
+        <ListView x:Name="repoListView" ItemsSource="{x:Bind ViewModel0.Repositories}" SelectionChanged="on_selection_changed">
+            <ListView.HeaderTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Margin="15,0,0,0" FontWeight="Bold" Text="Name"/>
+                        <TextBlock Grid.Column="1" Margin="15,0,0,0" FontWeight="Bold" Text="Owner"/>
+                        <TextBlock Grid.Column="2" Margin="15,0,0,0" FontWeight="Bold" Text="Project Uri"/>
+                    </Grid>
+                </DataTemplate>
+            </ListView.HeaderTemplate>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="local:RepositoryItem">
+                    <Grid Height="40">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="40"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" Text="{x:Bind Name, Mode=OneWay}"/>
+                        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{x:Bind Owner, Mode=OneWay}"/>
+                        <TextBlock Grid.Column="2" VerticalAlignment="Center" Text="{x:Bind ProjectUriString, Mode=OneWay}"/>
+                        <Button Grid.Column="3" Click="on_button_clicked" IsEnabled="True">
+                            <Image Source="Assets/StoreLogo.png"/>
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackPanel>
 </Page>

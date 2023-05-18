@@ -11,6 +11,8 @@
   <ItemGroup>
     <Midl Include="App.idl" />
     <Midl Include="MainWindow.idl" />
+    <Midl Include="RepositoryItem.idl" />
+    <Midl Include="RepositoryViewModel.idl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -18,6 +20,8 @@
     <ClCompile Include="StepTimer.cpp" />
     <ClCompile Include="DeviceProvider.cpp" />
     <ClCompile Include="DXGIProvider.cpp" />
+    <ClCompile Include="RepositoryItem.cpp" />
+    <ClCompile Include="RepositoryViewModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -25,6 +29,8 @@
     <ClInclude Include="DeviceProvider.h" />
     <ClInclude Include="DXGIProvider.h" />
     <ClInclude Include="winrt_fmt_helper.hpp" />
+    <ClInclude Include="RepositoryItem.h" />
+    <ClInclude Include="RepositoryViewModel.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Wide310x150Logo.scale-200.png">
@@ -55,7 +61,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="readme.txt" />
     <Text Include="Assets\shaders.hlsl">
       <Filter>Assets</Filter>
     </Text>

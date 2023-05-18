@@ -135,6 +135,8 @@
     <ClInclude Include="MainWindow.xaml.h">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </ClInclude>
+    <ClInclude Include="RepositoryItem.h" />
+    <ClInclude Include="RepositoryViewModel.h" />
     <ClInclude Include="StepTimer.h" />
     <ClInclude Include="TestPage1.xaml.h">
       <DependentUpon>TestPage1.xaml</DependentUpon>
@@ -169,6 +171,8 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
+    <ClCompile Include="RepositoryItem.cpp" />
+    <ClCompile Include="RepositoryViewModel.cpp" />
     <ClCompile Include="StepTimer.cpp" />
     <ClCompile Include="TestPage1.xaml.cpp">
       <DependentUpon>TestPage1.xaml</DependentUpon>
@@ -188,6 +192,12 @@
       <SubType>Code</SubType>
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Midl>
+    <Midl Include="RepositoryItem.idl">
+      <SubType>Code</SubType>
+    </Midl>
+    <Midl Include="RepositoryViewModel.idl">
+      <SubType>Code</SubType>
+    </Midl>
     <Midl Include="TestPage1.idl">
       <DependentUpon>TestPage1.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -196,11 +206,6 @@
       <DependentUpon>TestPage2.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Midl>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="readme.txt">
-      <DeploymentContent>false</DeploymentContent>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png" />
