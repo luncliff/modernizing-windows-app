@@ -7,6 +7,7 @@
     <Page Include="MainWindow.xaml" />
     <Page Include="TestPage1.xaml" />
     <Page Include="TestPage2.xaml" />
+    <Page Include="TestPage3.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="App.idl" />
@@ -61,11 +62,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Assets\shaders.hlsl">
-      <Filter>Assets</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <Manifest Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
@@ -73,5 +69,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\QuadPixelShaderNV12.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\QuadPixelShaderRGB.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
+    <FxCompile Include="Assets\QuadVertexShader.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -1,9 +1,13 @@
+
 namespace Exp1 {
 
 [default_interface] runtimeclass TestPage3 : Microsoft.UI.Xaml.Controls.Page {
   TestPage3();
 
   void SetSwapChainPanel(Microsoft.UI.Xaml.Controls.SwapChainPanel panel);
+  void UpdateOnce();
+  Windows.Foundation.IAsyncAction RunUpdate();
+  void CancelUpdate();
 }
 
 } // namespace Exp1

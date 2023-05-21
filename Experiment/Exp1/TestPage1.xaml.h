@@ -68,7 +68,8 @@ public:
 
   IAsyncAction validate_assets(IInspectable const&, TappedRoutedEventArgs const&);
 
-  void Page_Loaded(IInspectable const& sender, RoutedEventArgs const& e);
+  void Page_Loaded(IInspectable const&, RoutedEventArgs const&);
+  void Page_Unloaded(IInspectable const&, RoutedEventArgs const&);
   void updateSwitch_Toggled(IInspectable const&, RoutedEventArgs const&);
   void SwapchainPanel1_PointerEntered(IInspectable const&, PointerRoutedEventArgs const&);
   void SwapchainPanel1_PointerMoved(IInspectable const&, PointerRoutedEventArgs const&);

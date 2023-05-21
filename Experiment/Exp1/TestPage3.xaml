@@ -17,8 +17,8 @@
         </Grid.ColumnDefinitions>
         <!-- header for user control -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,0,10,0" >
-            <ToggleSwitch x:Name="updateSwitch" Grid.Row="0" Grid.Column="0" 
-                          OnContent="Running" OffContent="Paused" />
+            <ToggleSwitch x:Name="ToggleSwitch0" Grid.Row="0" Grid.Column="0" 
+                          OnContent="Running" OffContent="Paused" Toggled="ToggleSwitch0_Toggled" />
         </StackPanel>
         <!-- rendering output -->
         <SwapChainPanel x:Name="SwapchainPanel1" Grid.Row="1"

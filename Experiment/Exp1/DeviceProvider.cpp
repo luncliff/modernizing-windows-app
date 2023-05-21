@@ -34,7 +34,7 @@ DeviceProvider::DeviceProvider(DXGIProvider& dxgi) noexcept(false) {
       if (auto hr = d12_device->CreateCommandQueue(&desc, __uuidof(ID3D12CommandQueue), d12_command_queue.put_void());
           FAILED(hr))
         winrt::throw_hresult(hr);
-      SetName(d12_command_queue.get(), L"d12_command_queue");
+      d12_command_queue->SetName(L"d12_command_queue");
     }
     // DX11 device on the DX12 device, command queue
     {

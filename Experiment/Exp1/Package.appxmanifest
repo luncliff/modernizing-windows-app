@@ -44,5 +44,9 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
+    <uap:Capability Name="videosLibrary"/>
+    <uap:Capability Name="musicLibrary"/>
+    <Capability Name="internetClient"/>
+    <DeviceCapability Name="webcam"/>
   </Capabilities>
 </Package>

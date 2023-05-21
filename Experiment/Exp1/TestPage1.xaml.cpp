@@ -72,6 +72,14 @@ void TestPage1::Page_Loaded(IInspectable const&, RoutedEventArgs const&) {
   setup_graphics();
 }
 
+void TestPage1::Page_Unloaded(IInspectable const&, RoutedEventArgs const&) {
+  spdlog::info("{}: {}", "TestPage1", __func__);
+  if (action0 != nullptr) {
+    action0.Cancel();
+    action0 = nullptr;
+  }
+}
+
 void TestPage1::setup_graphics() noexcept(false) {
   // event handle for frame synchronization
   d12_fence_event = CreateEventW(nullptr, false, false, nullptr);

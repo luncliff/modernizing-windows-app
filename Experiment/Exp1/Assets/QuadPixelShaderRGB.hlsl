@@ -9,18 +9,17 @@
 //
 //*********************************************************
 
-struct PSInput {
-  float4 position : SV_POSITION;
-  float4 color : COLOR;
+// Per-pixel color data passed through the pixel shader.
+struct PixelShaderInput
+{
+    min16float4 pos      : SV_POSITION;
+    min16float2 texCoord : TEXCOORD0;
 };
 
-PSInput VSMain(float4 position : POSITION, float4 color : COLOR) {
-  PSInput result;
+Texture2D<float4>  rgbChannel     : t0;
+SamplerState       defaultSampler : s0;
 
-  result.position = position;
-  result.color = color;
-
-  return result;
+min16float4 main(PixelShaderInput input) : SV_TARGET
+{
+    return min16float4(rgbChannel.Sample(defaultSampler, input.texCoord));
 }
-
-float4 PSMain(PSInput input) : SV_TARGET { return input.color; }
