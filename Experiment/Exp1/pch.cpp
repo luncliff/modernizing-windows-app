@@ -1,9 +1,13 @@
+//#define INITGUID
 #define FMT_HEADER_ONLY
 #define SPDLOG_HEADER_ONLY
 #include "pch.h"
 
 #include <D3Dcompiler.h>
 #include <cstdio>
+#include <d3d9.h>
+#include <mmdeviceapi.h>
+
 #include <spdlog/pattern_formatter.h>
 #include <spdlog/sinks/base_sink.h>
 #include <spdlog/sinks/msvc_sink.h>
@@ -51,7 +55,7 @@ std::wstring mb2w(std::string_view in) noexcept(false) {
     if (len == static_cast<size_t>(-2)) // valid but incomplete
       break;                            // nothing to do more
     out.push_back(wc);
-    ptr += len; // advance [1...n]
+    ptr += len;                         // advance [1...n]
   }
   return out;
 }
@@ -89,13 +93,10 @@ HRESULT ReadDataFromFile(LPCWSTR filename, byte** data, UINT* size) {
   extendedParams.lpSecurityAttributes = nullptr;
   extendedParams.hTemplateFile = nullptr;
 
-  HANDLE file(CreateFile2(filename, GENERIC_READ, FILE_SHARE_READ,
-                          OPEN_EXISTING, &extendedParams));
+  HANDLE file(CreateFile2(filename, GENERIC_READ, FILE_SHARE_READ, OPEN_EXISTING, &extendedParams));
 #else
-  HANDLE file(CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, nullptr,
-                         OPEN_EXISTING,
-                         FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN |
-                             SECURITY_SQOS_PRESENT | SECURITY_ANONYMOUS,
+  HANDLE file(CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING,
+                         FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN | SECURITY_SQOS_PRESENT | SECURITY_ANONYMOUS,
                          nullptr));
 #endif
   if (file == INVALID_HANDLE_VALUE) {
@@ -103,8 +104,7 @@ HRESULT ReadDataFromFile(LPCWSTR filename, byte** data, UINT* size) {
   }
 
   FILE_STANDARD_INFO fileInfo = {};
-  if (!GetFileInformationByHandleEx(file, FileStandardInfo, &fileInfo,
-                                    sizeof(fileInfo))) {
+  if (!GetFileInformationByHandleEx(file, FileStandardInfo, &fileInfo, sizeof(fileInfo))) {
     throw std::exception();
   }
 
@@ -123,8 +123,7 @@ HRESULT ReadDataFromFile(LPCWSTR filename, byte** data, UINT* size) {
   return S_OK;
 }
 
-HRESULT ReadDataFromDDSFile(LPCWSTR filename, byte** data, UINT* offset,
-                            UINT* size) {
+HRESULT ReadDataFromDDSFile(LPCWSTR filename, byte** data, UINT* offset, UINT* size) {
   if (FAILED(ReadDataFromFile(filename, data, size))) {
     return E_FAIL;
   }
@@ -165,8 +164,7 @@ HRESULT ReadDataFromDDSFile(LPCWSTR filename, byte** data, UINT* offset,
   };
 
   auto ddsHeader = reinterpret_cast<const DDS_HEADER*>(*data + sizeof(UINT));
-  if (ddsHeader->size != sizeof(DDS_HEADER) ||
-      ddsHeader->ddsPixelFormat.size != sizeof(DDS_PIXELFORMAT)) {
+  if (ddsHeader->size != sizeof(DDS_HEADER) || ddsHeader->ddsPixelFormat.size != sizeof(DDS_PIXELFORMAT)) {
     return E_FAIL;
   }
 
@@ -186,10 +184,8 @@ void SetNameIndexed(ID3D12Object* pObject, LPCWSTR name, UINT index) {
     pObject->SetName(fullName);
   }
 }
-winrt::com_ptr<ID3DBlob> CompileShader(const std::wstring& filename,
-                                       const D3D_SHADER_MACRO* defines,
-                                       const std::string& entrypoint,
-                                       const std::string& target) {
+winrt::com_ptr<ID3DBlob> CompileShader(const std::wstring& filename, const D3D_SHADER_MACRO* defines,
+                                       const std::string& entrypoint, const std::string& target) {
   UINT compileFlags = 0;
 #if defined(_DEBUG) || defined(DBG)
   compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
@@ -199,10 +195,8 @@ winrt::com_ptr<ID3DBlob> CompileShader(const std::wstring& filename,
 
   winrt::com_ptr<ID3DBlob> byteCode = nullptr;
   winrt::com_ptr<ID3DBlob> errors = nullptr;
-  hr = D3DCompileFromFile(filename.c_str(), defines,
-                          D3D_COMPILE_STANDARD_FILE_INCLUDE, entrypoint.c_str(),
-                          target.c_str(), compileFlags, 0, byteCode.put(),
-                          errors.put());
+  hr = D3DCompileFromFile(filename.c_str(), defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, entrypoint.c_str(),
+                          target.c_str(), compileFlags, 0, byteCode.put(), errors.put());
 
   if (errors != nullptr) {
     OutputDebugStringA((char*)errors->GetBufferPointer());

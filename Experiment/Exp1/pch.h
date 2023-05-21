@@ -1,6 +1,11 @@
 #pragma once
 #include <Windows.h>
+#include <d3d11_4.h>
 #include <d3d12.h>
+
+#include <mfapi.h>
+#include <mfplay.h>
+#include <mfreadwrite.h>
 
 #undef GetCurrentTime
 #include <winrt/Microsoft.UI.Composition.h>
@@ -48,14 +53,11 @@ void GetAssetsPath(WCHAR* path, UINT pathSize);
 
 HRESULT ReadDataFromFile(LPCWSTR filename, byte** data, UINT* size);
 
-HRESULT ReadDataFromDDSFile(LPCWSTR filename, byte** data, UINT* offset,
-                            UINT* size);
+HRESULT ReadDataFromDDSFile(LPCWSTR filename, byte** data, UINT* offset, UINT* size);
 
 void SetName(ID3D12Object* pObject, LPCWSTR name);
 void SetNameIndexed(ID3D12Object* pObject, LPCWSTR name, UINT index);
-winrt::com_ptr<ID3DBlob> CompileShader(const std::wstring& filename,
-                                       const D3D_SHADER_MACRO* defines,
-                                       const std::string& entrypoint,
-                                       const std::string& target);
+winrt::com_ptr<ID3DBlob> CompileShader(const std::wstring& filename, const D3D_SHADER_MACRO* defines,
+                                       const std::string& entrypoint, const std::string& target);
 
 } // namespace winrt::Exp1

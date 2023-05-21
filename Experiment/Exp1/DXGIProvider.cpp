@@ -19,7 +19,7 @@ void DXGIProvider::GetHardwareAdapter(IDXGIFactory1* factory, IDXGIAdapter1** ou
     if (auto hr = adapter->GetDesc1(&desc); FAILED(hr))
       FAILED(hr);
     // Don't select the Basic Render Driver adapter.
-    if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) 
+    if (desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE)
       continue;
     // Support DirectX 11?
     if (SUCCEEDED(D3D12CreateDevice(adapter.get(), D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), nullptr)))
@@ -69,6 +69,10 @@ DXGIProvider::create_swapchain(const DXGI_SWAP_CHAIN_DESC1& desc, ID3D11Device* 
 
 winrt::com_ptr<IDXGIFactory4> DXGIProvider::get_factory() noexcept {
   return factory;
+}
+
+winrt::com_ptr<IDXGIAdapter1> DXGIProvider::get_adapter() noexcept {
+  return adapter;
 }
 
 DXGIProvider::DXGIProvider() noexcept(false) {

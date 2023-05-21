@@ -12,6 +12,18 @@
 
 #include "StepTimer.h"
 
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "evr.lib")
+#pragma comment(lib, "mfuuid.lib")
+#pragma comment(lib, "Dxva2.lib")
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "mf.lib")
+#pragma comment(lib, "mfplat.lib")
+#pragma comment(lib, "mfuuid.lib")
+#pragma comment(lib, "wmcodecdspuuid.lib")
+#pragma comment(lib, "mfreadwrite.lib")
+#pragma comment(lib, "mfplay.lib")
+
 namespace winrt::Exp1::implementation {
 using namespace Microsoft::UI::Xaml;
 using Windows::Storage::Streams::InputStreamOptions;
@@ -25,33 +37,65 @@ TestPage3::TestPage3() {
 TestPage3::~TestPage3() {
 }
 
-void TestPage3::OnNavigatedTo(const Microsoft::UI::Xaml::Navigation::NavigationEventArgs& e) {
+void TestPage3::OnNavigatedTo(const NavigationEventArgs& e) {
   spdlog::info("{}: {}", "TestPage3", __func__);
   auto address = winrt::unbox_value<uintptr_t>(e.Parameter());
   spdlog::debug("{}: {:p}", "TestPage3", reinterpret_cast<void*>(address));
-
+  // cast to MainWindow and use getters to share objects
   auto window = reinterpret_cast<implementation::MainWindow*>(address);
   if (window == nullptr)
     return;
-
   dxgi = window->get_dxgi_provider();
   devices = window->get_device_provider();
-}
-
-void TestPage3::OnNavigatedFrom(const Microsoft::UI::Xaml::Navigation::NavigationEventArgs&) {
-  spdlog::info("{}: {}", "TestPage3", __func__);
-}
-
-/// @see after OnNavigatedTo, prepare some resources
-void TestPage3::Page_Loaded(IInspectable const&, RoutedEventArgs const&) {
-  spdlog::info("{}: {}", "TestPage3", __func__);
   if (dxgi == nullptr || devices == nullptr)
     throw winrt::hresult_invalid_argument{};
-  setup_graphics();
 }
 
-void TestPage3::setup_graphics() noexcept(false) {
-  // ...
+void TestPage3::OnNavigatedFrom(const NavigationEventArgs&) {
+  spdlog::info("{}: {}", "TestPage3", __func__);
+}
+
+void TestPage3::Page_Loaded(IInspectable const&, RoutedEventArgs const&) {
+  spdlog::info("{}: {}", "TestPage3", __func__);
+  auto device = devices->get_dx11_device();
+  auto adapter = dxgi->get_adapter();
+  if (auto hr = MFCreateDXGIDeviceManager(&dxgi_manager_token, dxgi_manager.put()); FAILED(hr)) {
+    spdlog::error("{}: {}", "TestPage3", winrt::hresult_error{hr});
+    winrt::throw_hresult(hr);
+  }
+  // IID_ID3D11VideoDevice
+  const GUID service_id = {0x10EC4D5B, 0x975A, 0x4689, {0xB9, 0xE4, 0xD0, 0xAA, 0xC3, 0x0F, 0xE3, 0x33}};
+  if (auto hr = dxgi_manager->GetVideoService(dxgi_handle, service_id, video_device.put_void()); FAILED(hr)) {
+    switch (hr) {
+    case MF_E_DXGI_NEW_VIDEO_DEVICE:
+      spdlog::debug("{}: {}", "TestPage3", "CloseDeviceHandle");
+      dxgi_manager->CloseDeviceHandle(dxgi_handle);
+      [[fallthrough]];
+    case MF_E_DXGI_DEVICE_NOT_INITIALIZED:
+    case E_HANDLE:
+      spdlog::debug("{}: {}", "TestPage3", std::system_category().message(hr));
+      break;
+    default:
+      winrt::throw_hresult(hr);
+    }
+  }
+  spdlog::debug("{}: {}", "TestPage3", "ResetDevice");
+  if (auto hr = dxgi_manager->ResetDevice(device.get(), dxgi_manager_token); FAILED(hr))
+    winrt::throw_hresult(hr);
+  spdlog::debug("{}: {}", "TestPage3", "OpenDeviceHandle");
+  if (auto hr = dxgi_manager->OpenDeviceHandle(&dxgi_handle); FAILED(hr))
+    winrt::throw_hresult(hr);
+}
+
+void TestPage3::Page_Unloaded(IInspectable const&, RoutedEventArgs const&) {
+  spdlog::info("{}: {}", "TestPage3", __func__);
+  if (dxgi_handle) {
+    dxgi_manager->CloseDeviceHandle(dxgi_handle);
+    dxgi_handle = 0;
+  }
+  dxgi_manager = nullptr;
+  dxgi_manager_token = 0;
+  video_device = nullptr;
 }
 
 void TestPage3::SetSwapChainPanel(SwapChainPanel panel) {
@@ -62,24 +106,10 @@ void TestPage3::SetSwapChainPanel(SwapChainPanel panel) {
     winrt::throw_hresult(hr);
 }
 
-void TestPage3::on_panel_size_changed(IInspectable const&, SizeChangedEventArgs const& e) {
-  if (devices == nullptr)
-    return; // can't do the work...
-
-  // remove references to the swapchain
-  {
-    auto device_context = devices->get_dx11_device_context();
-    std::array<ID3D11RenderTargetView*, 1> targets0{};
-    // no depth, stencil
-    device_context->OMSetRenderTargets(static_cast<UINT>(targets0.size()), targets0.data(), nullptr);
-  }
-  render_target = nullptr;
-  render_target_texture = nullptr;
-
+void TestPage3::update_swapchain(Windows::Foundation::Size size) noexcept(false) {
   auto device = devices->get_dx11_device();
 
   DXGI_SWAP_CHAIN_DESC1 desc{};
-  auto size = e.NewSize();
   desc.Width = static_cast<UINT>(size.Width);
   desc.Height = static_cast<UINT>(size.Height);
   desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -90,7 +120,7 @@ void TestPage3::on_panel_size_changed(IInspectable const&, SizeChangedEventArgs 
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
     desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    desc.BufferCount = num_frames;
+    desc.BufferCount = 3;
     // All Windows Store apps must use this SwapEffect.
     desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
     desc.Flags = 0;
@@ -121,7 +151,23 @@ void TestPage3::on_panel_size_changed(IInspectable const&, SizeChangedEventArgs 
     spdlog::info("{}: {} {}", "TestPage3", "resized", msg);
   }
   // UpdateWindowSizeDependentResources...
-  return this->update_render_target(device.get());
+  update_render_target(device.get());
+}
+
+void TestPage3::on_panel_size_changed(IInspectable const&, SizeChangedEventArgs const& e) {
+  if (devices == nullptr)
+    return; // can't do the work...
+
+  // remove references to the swapchain
+  {
+    auto device_context = devices->get_dx11_device_context();
+    std::array<ID3D11RenderTargetView*, 1> targets0{};
+    // no depth, stencil
+    device_context->OMSetRenderTargets(static_cast<UINT>(targets0.size()), targets0.data(), nullptr);
+  }
+  render_target = nullptr;
+  render_target_texture = nullptr;
+  update_swapchain(e.NewSize());
 }
 
 void TestPage3::update_render_target(ID3D11Device* device) {

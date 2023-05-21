@@ -10,6 +10,7 @@ using Microsoft::UI::Xaml::SizeChangedEventArgs;
 using Microsoft::UI::Xaml::Controls::SwapChainPanel;
 using Microsoft::UI::Xaml::Input::PointerRoutedEventArgs;
 using Microsoft::UI::Xaml::Input::TappedRoutedEventArgs;
+using Microsoft::UI::Xaml::Navigation::NavigationEventArgs;
 using Windows::Foundation::IAsyncAction;
 using Windows::Foundation::IInspectable;
 
@@ -45,14 +46,15 @@ public:
 
   /// @brief the page is loaded
   /// @see https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.page.onnavigatedto
-  void OnNavigatedTo(const Microsoft::UI::Xaml::Navigation::NavigationEventArgs& e);
+  void OnNavigatedTo(const NavigationEventArgs& e);
   /// @brief the page will be unloaded
   /// @see https://learn.microsoft.com/en-us/uwp/api/windows.ui.xaml.controls.page.onnavigatedfrom
-  void OnNavigatedFrom(const Microsoft::UI::Xaml::Navigation::NavigationEventArgs& e);
+  void OnNavigatedFrom(const NavigationEventArgs& e);
 
   Windows::Foundation::IAsyncAction StartUpdate();
 
   void setup_graphics() noexcept(false);
+  void update_swapchain(Windows::Foundation::Size size) noexcept(false);
   void update_render_target(ID3D11Device* device);
 
   void wait_for_gpu() noexcept(false);

@@ -19,6 +19,7 @@ public:
   DXGIProvider() noexcept(false);
 
   winrt::com_ptr<IDXGIFactory4> get_factory() noexcept;
+  winrt::com_ptr<IDXGIAdapter1> get_adapter() noexcept;
 
   HRESULT create_device(ID3D12Device** output, bool hardware = true) noexcept(false);
   HRESULT create_swapchain(const DXGI_SWAP_CHAIN_DESC1& desc, ID3D11Device* device,
