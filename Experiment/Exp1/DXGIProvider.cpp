@@ -4,6 +4,52 @@
 
 namespace winrt::Exp1 {
 
+DXGIDeviceManager::DXGIDeviceManager() noexcept(false) {
+  if (auto hr = MFCreateDXGIDeviceManager(&token, manager.put()); FAILED(hr)) {
+    spdlog::error("{}: {}", "DXGIDeviceManager", winrt::hresult_error{hr});
+    winrt::throw_hresult(hr);
+  }
+  // IID_ID3D11VideoDevice
+  const GUID service_id = {0x10EC4D5B, 0x975A, 0x4689, {0xB9, 0xE4, 0xD0, 0xAA, 0xC3, 0x0F, 0xE3, 0x33}};
+  if (auto hr = manager->GetVideoService(handle, service_id, video_device.put_void()); FAILED(hr)) {
+    switch (hr) {
+    case MF_E_DXGI_NEW_VIDEO_DEVICE:
+      spdlog::debug("{}: {}", "DXGIDeviceManager", "MF_E_DXGI_NEW_VIDEO_DEVICE");
+      manager->CloseDeviceHandle(handle);
+      [[fallthrough]];
+    case MF_E_DXGI_DEVICE_NOT_INITIALIZED:
+    case E_HANDLE:
+      spdlog::debug("{}: {}", "DXGIDeviceManager", winrt::hresult_error{hr});
+      break;
+    default:
+      winrt::throw_hresult(hr);
+    }
+  }
+}
+
+DXGIDeviceManager::~DXGIDeviceManager() noexcept {
+  if (handle) {
+    manager->CloseDeviceHandle(handle);
+    handle = 0;
+  }
+  manager = nullptr;
+  token = 0;
+  video_device = nullptr;
+}
+
+HRESULT DXGIDeviceManager::reset(ID3D11Device* device) noexcept {
+  if (handle) {
+    spdlog::debug("{}: {}", "DXGIDeviceManager", "CloseDeviceHandle");
+    manager->CloseDeviceHandle(handle);
+    handle = 0;
+  }
+  spdlog::debug("{}: {}", "DXGIDeviceManager", "ResetDevice");
+  if (auto hr = manager->ResetDevice(device, token); FAILED(hr))
+    return hr;
+  spdlog::debug("{}: {}", "DXGIDeviceManager", "OpenDeviceHandle");
+  return manager->OpenDeviceHandle(&handle);
+}
+
 void DXGIProvider::GetHardwareAdapter(IDXGIFactory1* factory, IDXGIAdapter1** output,
                                       DXGI_GPU_PREFERENCE preference) noexcept(false) {
   *output = nullptr;

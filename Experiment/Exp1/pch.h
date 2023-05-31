@@ -3,6 +3,7 @@
 
 #include <d3d11_4.h>
 #include <d3d12.h>
+#include <d3d9on12.h>
 #include <mfapi.h>
 #include <mfplay.h>
 #include <mfreadwrite.h>

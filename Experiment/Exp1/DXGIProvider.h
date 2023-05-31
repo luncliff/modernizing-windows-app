@@ -11,6 +11,19 @@ namespace winrt::Exp1 {
 
 using Windows::Foundation::IAsyncAction;
 
+class DXGIDeviceManager final {
+  winrt::com_ptr<IMFDXGIDeviceManager> manager = nullptr;
+  UINT token = 0;
+  HANDLE handle = nullptr;
+  winrt::com_ptr<ID3D11VideoDevice> video_device = nullptr;
+
+public:
+  DXGIDeviceManager() noexcept(false);
+  ~DXGIDeviceManager() noexcept;
+
+  HRESULT reset(ID3D11Device* device) noexcept;
+};
+
 class DXGIProvider final {
   winrt::com_ptr<IDXGIFactory4> factory;
   winrt::com_ptr<IDXGIAdapter1> adapter;
