@@ -1,0 +1,9 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+    "name": "modernizing-windows-app",
+    "version-date": "2023-12-01",
+    "license": "MIT",
+    "dependencies": [
+        "spdlog"
+    ]
+}

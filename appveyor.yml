@@ -23,14 +23,17 @@ configuration:
   # - release
 
 cache:
-  # - c:/tools/vcpkg/downloads
+  - c:/tools/vcpkg/downloads
+  - c:/tools/vcpkg/caches
   - C:/Program Files (x86)/Microsoft SDKs/NuGetPackages
   - C:/Program Files/dotnet/library-packs
 
 environment:
-  # global:
-  #   VCPKG_ROOT: c:/tools/vcpkg
-  matrix: 
+  global:
+    VCPKG_ROOT: c:/tools/vcpkg
+    VCPKG_DEFAULT_BINARY_CACHE: c:/tools/vcpkg/caches
+    VCPKG_FEATURE_FLAGS: "registries,binarycaching,manifests,versions"
+  matrix:
     - folder: Chapter01/01-WinUI-Packaged
       sln: 01-WinUI-Packaged.sln
     - folder: Chapter01/02-WinUI-Unpackaged
@@ -39,6 +42,12 @@ environment:
       sln: PropertiesEvents.sln
     - folder: Chapter02/02-Resources
       sln: Resources.sln
+    - folder: Chapter02/03-Styles
+      sln: Styles.sln
+    - folder: Chapter02/05-Templates
+      sln: Templates.sln
+    - folder: Chapter02/06-VisualStates
+      sln: VisualStates.sln
     - folder: Chapter02/07-DataBinding
       sln: DataBinding.sln
     - folder: Chapter02/08-UserControls
@@ -53,7 +62,7 @@ environment:
       sln: Power.sln
     - folder: Chapter04/02-Activation
       sln: Activation.sln
-    - folder: Chapter04/02-Instancing
+    - folder: Chapter04/03-Instancing
       sln: 03-Instancing.sln
     - folder: Chapter04/04-Windowing
       sln: 04-Windowing.sln
@@ -73,7 +82,7 @@ environment:
       sln: LocationServices.sln
     - folder: Chapter08/03-Files
       sln: Files.sln
-    - folder: Chapter08/06-HybridApp
+    - folder: Chapter08/05-HybridApp
       sln: HybridApp.sln
     - folder: Chapter09/01-Notifications
       sln: Notifications.sln
@@ -82,6 +91,11 @@ environment:
 
 install:
   - ps: nuget restore "${env:folder}/${env:sln}"
+
+before_build:
+  - ps: New-Item -Type Directory -Force -Path "${env:VCPKG_DEFAULT_BINARY_CACHE}"
+  - ps: vcpkg install --triplet=x64-windows
+  - ps: vcpkg integrate install
 
 build:
   project: $(folder)/$(sln)
