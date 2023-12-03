@@ -1,0 +1,17 @@
+// C:\Program Files (x86)\Windows Kits\10\Include\10.0.22621.0
+// using namespace Windows::Storage;
+// import "windows.storage.idl";
+
+namespace ActivationCpp
+{
+[default_interface] runtimeclass MainWindow : Microsoft.UI.Xaml.Window
+{
+    MainWindow();
+
+    Windows.Storage.IStorageItem FilePath
+    {
+        get;
+        set;
+    };
+}
+} // namespace ActivationCpp
