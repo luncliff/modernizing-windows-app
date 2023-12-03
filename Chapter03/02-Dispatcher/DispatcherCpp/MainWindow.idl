@@ -1,0 +1,12 @@
+namespace DispatcherCpp
+{
+[default_interface] runtimeclass MainWindow : Microsoft.UI.Xaml.Window
+{
+    MainWindow();
+
+    Windows.Foundation.IAsyncAction OnUpdateMessage(IInspectable sender, Microsoft.UI.Xaml.RoutedEventArgs e);
+    Windows.Foundation.IAsyncAction OnUpdateMessageWithToolkit(IInspectable sender,
+                                                               Microsoft.UI.Xaml.RoutedEventArgs e);
+}
+
+} // namespace DispatcherCpp
